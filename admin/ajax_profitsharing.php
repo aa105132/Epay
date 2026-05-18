@@ -322,8 +322,9 @@ case 'operation': //批量操作订单
 	$checkbox=$_POST['checkbox'];
 	$i=0;
 	foreach($checkbox as $id){
-		if($status==5)$DB->exec("DELETE FROM pre_psorder WHERE id='$id'");
-		else $DB->exec("update pre_psorder set status='$status' where id='$id' limit 1");
+		$id=intval($id);
+		if($status==5)$DB->exec("DELETE FROM pre_psorder WHERE id = :id", [':id'=>$id]);
+		else $DB->exec("update pre_psorder set status = :s where id = :id limit 1", [':s'=>$status, ':id'=>$id]);
 		$i++;
 	}
 	exit('{"code":0,"msg":"成功改变'.$i.'条订单状态"}');

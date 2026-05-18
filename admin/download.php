@@ -524,17 +524,22 @@ if(!empty($_GET['starttime']) || !empty($_GET['endtime'])){
 		$sql.=" AND A.addtime<='{$endtime} 23:59:59'";
 	}
 }
+$params = [];
 if(isset($_GET['value']) && !empty($_GET['value'])) {
-	if($_GET['column']=='title' || $_GET['column']=='content'){
-		$sql.=" AND A.`{$_GET['column']}` like '%{$_GET['value']}%'";
+	$allowed_columns = ['uid','trade_no','title','content','paytype','type','status','channel'];
+	if(!in_array($_GET['column'], $allowed_columns, true)) exit('invalid column');
+	if(in_array($_GET['column'], ['title','content'], true)){
+		$sql.=" AND A.`{$_GET['column']}` LIKE :v";
+		$params[':v'] = '%'.$_GET['value'].'%';
 	}else{
-		$sql.=" AND A.`{$_GET['column']}`='{$_GET['value']}'";
+		$sql.=" AND A.`{$_GET['column']}` = :v";
+		$params[':v'] = $_GET['value'];
 	}
 }
 
 $file="ID,商户号,支付方式,通道ID,关联订单号,商品名称,订单金额,问题类型,投诉原因,投诉详情,创建时间,最后更新时间,状态\r\n";
 
-$rs = $DB->query("SELECT A.*,B.money,B.name ordername,B.status orderstatus FROM pre_complain A LEFT JOIN pre_order B ON A.trade_no=B.trade_no WHERE{$sql} order by A.addtime desc limit 100000");
+$rs = $DB->query("SELECT A.*,B.money,B.name ordername,B.status orderstatus FROM pre_complain A LEFT JOIN pre_order B ON A.trade_no=B.trade_no WHERE{$sql} order by A.addtime desc limit 100000", $params);
 while($row = $rs->fetch()){
 	$file.=''.$row['id'].','.$row['uid'].','.$paytype[$row['paytype']].','.$row['channel'].',="'.$row['trade_no'].'",'.$row['ordername'].','.$row['money'].','.$row['type'].','.$row['title'].','.str_replace(["\r\n", "\n"]," ",$row['content']).','.$row['addtime'].','.$row['edittime'].','.['0'=>'待处理','1'=>'处理中','2'=>'处理完成'][$row['status']]."\r\n";
 }

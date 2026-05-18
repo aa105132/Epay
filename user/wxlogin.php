@@ -8,9 +8,8 @@ include("../includes/common.php");
 if($conf['login_wx']==0)sysmsg("未开启微信快捷登录");
 
 if(isset($_GET['sid'])){
-	$sid = trim(daddslashes($_GET['sid']));
-	if(!preg_match('/^(.[a-zA-Z0-9]+)$/',$sid))exit("Access Denied");
-	session_id($sid);
+	// 客户端不可控制 session id 以防止会话固定（CWE-384）。
+	// 使用不可预测 state 参数替代 sid 传递扫码/轮询关联。
 }
 session_start();
 

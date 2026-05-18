@@ -20,6 +20,9 @@ $url = base64_decode($url);
 if(!is_url($url)){
     exit('{"code":-1,"msg":"URL不合法"}');
 }
+if(!is_public_url($url)){
+    exit('{"code":-1,"msg":"不允许访问内网地址"}');
+}
 
 echo curl_get($url);
 

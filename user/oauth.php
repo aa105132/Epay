@@ -7,9 +7,11 @@ include("../includes/common.php");
 if($conf['login_alipay']==0)sysmsg("未开启支付宝快捷登录");
 
 if(isset($_GET['sid'])){
-	$sid = trim(daddslashes($_GET['sid']));
-	if(!preg_match('/^(.[a-zA-Z0-9]+)$/',$sid))exit("Access Denied");
-	session_id($sid);
+	// 客户端不可控制 session id 以防止会话固定（CWE-384）。
+	// 如需跨扫码页与轮询页传递状态，请使用不可预测的 state 参数：
+	//   $state = bin2hex(random_bytes(16));
+	//   $_SESSION['oauth_state'] = $state; $_SESSION['oauth_state_exp'] = time()+600;
+	//   // 扫码页把 $state 编入二维码 URL，轮询页用 hash_equals 校验
 }
 session_start();
 

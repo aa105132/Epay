@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && (!isset($_POST['csrf_token']) || $_POS
 $my=isset($_GET['my'])?$_GET['my']:null;
 if($my=='edit'){
 	$id=intval($_GET['id']);
-	$rows=$DB->getRow("select * from pre_anounce where id='$id' limit 1");
+	$rows=$DB->getRow("select * from pre_anounce where id = :id limit 1", [':id'=>$id]);
 	if(!$rows)
 		showmsg('当前公告不存在！',3);
 ?>
@@ -55,7 +55,7 @@ $color=trim($_POST['color']);
 if(!$content || !$sort){
 showmsg('公告内容不能为空',3);
 } else {
-$sds=$DB->exec("INSERT INTO `pre_anounce` (`content`, `color`, `sort`, `addtime`, `status`) VALUES ('{$content}', '{$color}', '{$sort}', '{$date}', 1)");
+$sds=$DB->exec("INSERT INTO `pre_anounce` (`content`, `color`, `sort`, `addtime`, `status`) VALUES (:content, :color, :sort, :addtime, 1)", [':content'=>$content, ':color'=>$color, ':sort'=>$sort, ':addtime'=>$date]);
 if($sds){
 	showmsg('添加公告成功！<br/><br/><a href="./gonggao.php">>>返回公告列表</a>',1);
 }else
@@ -64,7 +64,7 @@ if($sds){
 }
 elseif($my=='edit_submit'){
 $id=intval($_GET['id']);
-$rows=$DB->getRow("select * from pre_anounce where id='$id' limit 1");
+$rows=$DB->getRow("select * from pre_anounce where id = :id limit 1", [':id'=>$id]);
 if(!$rows)
 	showmsg('当前公告不存在！',3);
 $content=$_POST['content'];
@@ -73,7 +73,7 @@ $color=trim($_POST['color']);
 if(!$content || !$sort){
 showmsg('公告内容不能为空',3);
 } else {
-$sds=$DB->exec("UPDATE `pre_anounce` SET `content`='$content',`sort`='$sort',`color`='$color' WHERE `id`='$id'");
+$sds=$DB->exec("UPDATE `pre_anounce` SET `content` = :content, `sort` = :sort, `color` = :color WHERE `id` = :id", [':content'=>$content, ':sort'=>$sort, ':color'=>$color, ':id'=>$id]);
 if($sds!==false){
 	showmsg('修改公告成功！<br/><br/><a href="./gonggao.php">>>返回公告列表</a>',1);
 }else

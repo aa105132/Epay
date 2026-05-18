@@ -102,7 +102,8 @@ class qq_qrlogin{
 	}
 }
 
-if(strpos($_SERVER['HTTP_REFERER'],$_SERVER['HTTP_HOST'])===false)exit('{"saveOK":-1}');
+$refHost = parse_url($_SERVER['HTTP_REFERER'] ?? '', PHP_URL_HOST);
+if(!$refHost || strcasecmp($refHost, $_SERVER['HTTP_HOST']) !== 0)exit('{"saveOK":-1}');
 
 $login=new qq_qrlogin();
 if($_GET['do']=='qrlogin'){

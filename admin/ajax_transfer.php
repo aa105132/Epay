@@ -37,17 +37,22 @@ case 'transferList':
 			$sql.=" AND addtime<='{$endtime} 23:59:59'";
 		}
 	}
+	$params = [];
 	if(isset($_POST['value']) && !empty($_POST['value'])) {
-		if($_POST['column']=='username'||$_POST['column']=='desc'){
-			$sql.=" AND `{$_POST['column']}` LIKE '%{$_POST['value']}%'";
+		$allowed_columns = ['uid','biz_no','username','desc','type','status','channel'];
+		if(!in_array($_POST['column'], $allowed_columns, true)) exit('{"code":-1,"msg":"invalid column"}');
+		if(in_array($_POST['column'], ['username','desc'], true)){
+			$sql.=" AND `{$_POST['column']}` LIKE :v";
+			$params[':v'] = '%'.$_POST['value'].'%';
 		}else{
-			$sql.=" AND `{$_POST['column']}`='{$_POST['value']}'";
+			$sql.=" AND `{$_POST['column']}` = :v";
+			$params[':v'] = $_POST['value'];
 		}
 	}
 	$offset = intval($_POST['offset']);
 	$limit = intval($_POST['limit']);
-	$total = $DB->getColumn("SELECT count(*) from pre_transfer WHERE{$sql}");
-	$list = $DB->getAll("SELECT * FROM pre_transfer WHERE{$sql} order by biz_no desc limit $offset,$limit");
+	$total = $DB->getColumn("SELECT count(*) from pre_transfer WHERE{$sql}", $params);
+	$list = $DB->getAll("SELECT * FROM pre_transfer WHERE{$sql} order by biz_no desc limit $offset,$limit", $params);
 	$list2 = [];
 	foreach($list as $row){
 		if($row['type'] == 'wxpay' && $row['status'] == 0 && !empty($row['ext'])){
@@ -90,21 +95,26 @@ case 'statistics':
 			$sql.=" AND addtime<='{$endtime} 23:59:59'";
 		}
 	}
+	$params = [];
 	if(isset($_POST['value']) && !empty($_POST['value'])) {
-		if($_POST['column']=='username'||$_POST['column']=='desc'){
-			$sql.=" AND `{$_POST['column']}` LIKE '%{$_POST['value']}%'";
+		$allowed_columns = ['uid','biz_no','username','desc','type','status'];
+		if(!in_array($_POST['column'], $allowed_columns, true)) exit('{"code":-1,"msg":"invalid column"}');
+		if(in_array($_POST['column'], ['username','desc'], true)){
+			$sql.=" AND `{$_POST['column']}` LIKE :v";
+			$params[':v'] = '%'.$_POST['value'].'%';
 		}else{
-			$sql.=" AND `{$_POST['column']}`='{$_POST['value']}'";
+			$sql.=" AND `{$_POST['column']}` = :v";
+			$params[':v'] = $_POST['value'];
 		}
 	}
-	$totalMoney = $DB->getColumn("SELECT SUM(money) FROM pre_transfer WHERE{$sql} AND status<>2");
-	$resultCount = $DB->getRow("SELECT 
+	$totalMoney = $DB->getColumn("SELECT SUM(money) FROM pre_transfer WHERE{$sql} AND status<>2", $params);
+	$resultCount = $DB->getRow("SELECT
     COUNT(*) AS totalCount,
     COUNT(status = 0 OR NULL) AS status0count,
     COUNT(status = 1 OR NULL) AS status1count,
     COUNT(status = 2 OR NULL) AS status2count,
     COUNT(status = 3 OR NULL) AS status3count
-    FROM pre_transfer WHERE{$sql}");
+    FROM pre_transfer WHERE{$sql}", $params);
 	exit(json_encode(['code'=>0, 'data'=>['totalMoney'=>number_format($totalMoney, 2, '.', '') ?? 0.00, 'totalCount'=>$resultCount['totalCount'], 'status0count'=>$resultCount['status0count'], 'status1count'=>$resultCount['status1count'], 'status2count'=>$resultCount['status2count'], 'status3count'=>$resultCount['status3count']]]));
 break;
 

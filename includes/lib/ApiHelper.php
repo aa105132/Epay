@@ -67,8 +67,19 @@ class ApiHelper
     static public function api_verify($userrow, $queryArr, $forceRsa = false){
         if($forceRsa && $queryArr['sign_type'] != 'RSA')throw new Exception('该接口只能使用RSA签名类型');
         if($userrow['keytype'] == 1 && $queryArr['sign_type'] != 'RSA')throw new Exception('该商户只能使用RSA签名类型');
-        if(!empty($queryArr['timestamp'])){
-            if(abs(time() - $queryArr['timestamp']) > 300)throw new Exception('时间戳字段不正确，请检查服务器时间');
+        if(empty($queryArr['timestamp'])){
+            throw new Exception('timestamp 不能为空');
+        }
+        if(abs(time() - $queryArr['timestamp']) > 300){
+            throw new Exception('时间戳字段不正确，请检查服务器时间');
+        }
+        if(!empty($queryArr['nonce']) && strlen($queryArr['nonce']) >= 8){
+            global $CACHE;
+            $cacheKey = 'api_nonce:'.$userrow['uid'].':'.$queryArr['nonce'];
+            if($CACHE->read($cacheKey)){
+                throw new Exception('请求已被使用（nonce 重复）');
+            }
+            $CACHE->save($cacheKey, 1, 600);
         }
         $sign_type = $queryArr['sign_type'] ? $queryArr['sign_type'] : 'MD5';
         if(!\lib\Payment::verifySign($queryArr, $userrow['key'], $userrow['publickey']))throw new Exception($sign_type.'签名校验失败');

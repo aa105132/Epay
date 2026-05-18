@@ -2,11 +2,10 @@
 $nosession=true;
 include("../includes/common.php");
 if(isset($_GET['sid'])){
-	$sid = trim(daddslashes($_GET['sid']));
-	if(!preg_match('/^(.[a-zA-Z0-9]+)$/',$sid))exit("Access Denied");
-	session_id($sid);
-	session_start();
+	// 客户端不可控制 session id 以防止会话固定（CWE-384）。
+	// 使用不可预测 state 参数替代 sid 传递扫码/轮询关联。
 }
+session_start();
 
 @header('Content-Type: text/html; charset=UTF-8');
 

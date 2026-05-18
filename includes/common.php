@@ -36,6 +36,13 @@ if(!function_exists("is_https")){
 	}
 }
 
+$host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+$host = preg_replace('/:\d+$/', '', $host);
+$allowed_hosts = defined('ALLOWED_HOSTS') ? ALLOWED_HOSTS : [];
+if(!empty($allowed_hosts) && !in_array($host, $allowed_hosts, true)){
+	http_response_code(400);
+	exit('invalid host');
+}
 $siteurl = (is_https() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].'/';
 
 include_once(SYSTEM_ROOT."autoloader.php");

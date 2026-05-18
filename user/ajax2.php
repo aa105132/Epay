@@ -291,6 +291,8 @@ case 'completeinfo':
 	}
 break;
 case 'edit_settle':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
+
 	$type=intval($_POST['stype']);
 	$account=htmlspecialchars(strip_tags(trim($_POST['account'])));
 	$username=htmlspecialchars(strip_tags(trim($_POST['username'])));
@@ -323,6 +325,7 @@ case 'edit_settle':
 	}
 break;
 case 'edit_info':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$email=htmlspecialchars(strip_tags(trim($_POST['email'])));
 	$qq=htmlspecialchars(strip_tags(trim($_POST['qq'])));
 	$url=htmlspecialchars(strip_tags(trim($_POST['url'])));
@@ -436,6 +439,7 @@ case 'edit_msgconfig':
 	}
 break;
 case 'edit_bind':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$email=htmlspecialchars(strip_tags(trim($_POST['email'])));
 	$phone=htmlspecialchars(strip_tags(trim($_POST['phone'])));
 	$code=trim($_POST['code']);
@@ -485,10 +489,10 @@ case 'checkbind':
 	}
 break;
 case 'resetKey':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	if(isset($_POST['submit'])){
 		$key = random(32);
-		$sql = "UPDATE pre_user SET `key`='$key' WHERE uid='$uid'";
-		if($DB->exec($sql)!==false)exit('{"code":0,"msg":"重置密钥成功","key":"'.$key.'"}');
+		if($DB->exec("UPDATE pre_user SET `key`=:key WHERE uid=:uid", [':key'=>$key, ':uid'=>$uid])!==false)exit('{"code":0,"msg":"重置密钥成功","key":"'.$key.'"}');
 		else exit('{"code":-1,"msg":"重置密钥失败['.$DB->error().']"}');
 	}
 break;
@@ -500,6 +504,7 @@ case 'createRsaPair':
 	}
 break;
 case 'edit_pwd':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$oldpwd=trim($_POST['oldpwd']);
 	$newpwd=trim($_POST['newpwd']);
 	$newpwd2=trim($_POST['newpwd2']);

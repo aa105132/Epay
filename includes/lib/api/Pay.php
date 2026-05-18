@@ -538,16 +538,16 @@ class Pay
         $pid=intval($queryArr['pid']);
         
         if(!empty($queryArr['trade_no'])){
-            $trade_no=daddslashes($queryArr['trade_no']);
-            $order=$DB->getRow("SELECT * FROM pre_order WHERE uid='{$pid}' and trade_no='{$trade_no}' limit 1");
+            $trade_no=$queryArr['trade_no'];
+            $order=$DB->getRow("SELECT * FROM pre_order WHERE uid=:pid and trade_no=:trade_no limit 1", [':pid'=>$pid, ':trade_no'=>$trade_no]);
         }elseif(!empty($queryArr['out_trade_no'])){
-            $out_trade_no=daddslashes($queryArr['out_trade_no']);
-            $order=$DB->getRow("SELECT * FROM pre_order WHERE uid='{$pid}' and out_trade_no='{$out_trade_no}' limit 1");
+            $out_trade_no=$queryArr['out_trade_no'];
+            $order=$DB->getRow("SELECT * FROM pre_order WHERE uid=:pid and out_trade_no=:out_trade_no limit 1", [':pid'=>$pid, ':out_trade_no'=>$out_trade_no]);
         }else{
             throw new Exception('订单号不能为空');
         }
         if($order){
-            $type=$DB->getColumn("SELECT name FROM pre_type WHERE id='{$order['type']}' LIMIT 1");
+            $type=$DB->getColumn("SELECT name FROM pre_type WHERE id=:id LIMIT 1", [':id'=>$order['type']]);
             $result = ['code'=>0, 'trade_no'=>$order['trade_no'],'out_trade_no'=>$order['out_trade_no'],'api_trade_no'=>$order['api_trade_no'],'bill_trade_no'=>$order['bill_trade_no'],'bill_mch_trade_no'=>$order['bill_mch_trade_no'],'type'=>$type,'pid'=>$order['uid'],'addtime'=>$order['addtime'],'endtime'=>$order['endtime'],'name'=>$order['name'],'money'=>$order['money'],'param'=>$order['param'],'buyer'=>$order['buyer'],'clientip'=>$order['ip'],'status'=>$order['status'],'refundmoney'=>$order['refundmoney']];
             $result = array_filter($result, function($a){return !isEmpty($a);});
             return $result;
