@@ -73,7 +73,10 @@ class ApiHelper
         if(abs(time() - $queryArr['timestamp']) > 300){
             throw new Exception('时间戳字段不正确，请检查服务器时间');
         }
-        if(!empty($queryArr['nonce']) && strlen($queryArr['nonce']) >= 8){
+        if(!empty($queryArr['nonce'])){
+            if(strlen($queryArr['nonce']) < 8){
+                throw new Exception('nonce 长度不能小于8位');
+            }
             global $CACHE;
             $cacheKey = 'api_nonce:'.$userrow['uid'].':'.$queryArr['nonce'];
             if($CACHE->read($cacheKey)){

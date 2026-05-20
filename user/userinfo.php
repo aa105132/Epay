@@ -3,6 +3,9 @@ include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $title='个人资料';
 include './head.php';
+$csrf_token = md5(mt_rand(0,999).time());
+$_SESSION['csrf_token'] = $csrf_token;
+echo '<script>var user_csrf_token = "'.$csrf_token.'";</script>';
 ?>
 <?php
 $mod=isset($_GET['mod'])?$_GET['mod']:'api';
@@ -195,7 +198,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_pwd",
-			data : {oldpwd:oldpwd,newpwd:newpwd,newpwd2:newpwd2},
+			data : {oldpwd:oldpwd,newpwd:newpwd,newpwd2:newpwd2,csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);
@@ -213,7 +216,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_keytype",
-			data : {keytype:keytype},
+			data : {keytype:keytype,csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);
@@ -233,7 +236,7 @@ function resetKey(){
 		$.ajax({
 			type : 'POST',
 			url : 'ajax2.php?act=resetKey',
-			data : 'submit=do',
+			data : 'submit=do&csrf_token='+user_csrf_token,
 			dataType : 'json',
 			success : function(data) {
 				if(data.code == 0){
@@ -258,7 +261,7 @@ function createRsaPair(){
 		$.ajax({
 			type : 'POST',
 			url : 'ajax2.php?act=createRsaPair',
-			data : 'submit=do',
+			data : 'submit=do&csrf_token='+user_csrf_token,
 			dataType : 'json',
 			success : function(data) {
 				if(data.code == 0){

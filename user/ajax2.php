@@ -366,6 +366,7 @@ case 'edit_info':
 	}
 break;
 case 'edit_keytype':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$keytype=intval($_POST['keytype']);
 	$sqs = $DB->update('user', ['keytype'=>$keytype], ['uid'=>$uid]);
 	if($sqs!==false){
@@ -375,6 +376,7 @@ case 'edit_keytype':
 	}
 break;
 case 'edit_voice':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$voice_devid=trim($_POST['voice_devid']);
 	$voice_order=intval($_POST['voice_order']);
 	$sqs = $DB->update('user', ['voice_devid'=>$voice_devid, 'voice_order'=>$voice_order], ['uid'=>$uid]);
@@ -385,6 +387,7 @@ case 'edit_voice':
 	}
 break;
 case 'edit_print':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$print_order=intval($_POST['print_order']);
 	$print_devid=trim($_POST['print_devid']);
 	$print_count=trim($_POST['print_count']);
@@ -398,6 +401,7 @@ case 'edit_print':
 	}
 break;
 case 'edit_channel_info':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$setting=$_POST['setting'];
 	$channelinfo = json_encode($setting);
 
@@ -409,6 +413,7 @@ case 'edit_channel_info':
 	}
 break;
 case 'edit_mode':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$mode=intval($_POST['mode']);
 
 	$sqs=$DB->update('user', ['mode'=>$mode], ['uid'=>$uid]);
@@ -419,6 +424,7 @@ case 'edit_mode':
 	}
 break;
 case 'edit_msgconfig':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$msgconfig = [
 		'order' => intval($_POST['notice_order']),
 		'settle' => intval($_POST['notice_settle']),
@@ -497,6 +503,7 @@ case 'resetKey':
 	}
 break;
 case 'createRsaPair':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	if(isset($_POST['submit'])){
 		$keypair = generate_key_pair();
 		$DB->update('user', ['publickey'=>$keypair['public_key']], ['uid'=>$uid]);
@@ -539,6 +546,7 @@ case 'edit_pwd':
 	}
 break;
 case 'edit_codename':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$codename=htmlspecialchars(strip_tags(trim($_POST['codename'])));
 
 	$msg = '';
@@ -897,6 +905,7 @@ case 'groupbuy':
 	}
 break;
 case 'addDomain':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	if(!$conf['pay_domain_open']) exit('{"code":-1,"msg":"未开启授权支付域名添加"}');
 	$domain = trim(daddslashes($_POST['domain']));
 	if(empty($domain))exit('{"code":-1,"msg":"域名不能为空"}');
@@ -908,9 +917,10 @@ case 'addDomain':
 	exit(json_encode(['code'=>0, 'msg'=>'添加域名成功！']));
 break;
 case 'delDomain':
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	if(!$conf['pay_domain_open']) exit('{"code":-1,"msg":"未开启授权支付域名添加"}');
 	$id = intval($_POST['id']);
-	if(!$DB->exec("DELETE FROM pre_domain WHERE id='$id' and uid='$uid'"))exit('{"code":-1,"msg":"删除失败'.$DB->error().'"}');
+	if(!$DB->delete('domain', ['id'=>$id, 'uid'=>$uid]))exit('{"code":-1,"msg":"删除失败'.$DB->error().'"}');
 	exit(json_encode(['code'=>0, 'msg'=>'succ']));
 break;
 
@@ -1252,6 +1262,7 @@ case 'refund_query': //退款查询
 	exit(json_encode($result));
 break;
 case 'refund_submit': //确认退款
+	if(!isset($_POST['csrf_token']) || $_POST['csrf_token']!==$_SESSION['csrf_token'])exit('{"code":-1,"msg":"CSRF TOKEN ERROR"}');
 	$trade_no=daddslashes(trim($_POST['trade_no']));
 	$pwd=trim($_POST['pwd']);
 	$money = trim($_POST['money']);

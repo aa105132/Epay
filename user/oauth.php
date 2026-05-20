@@ -7,18 +7,37 @@ include("../includes/common.php");
 if($conf['login_alipay']==0)sysmsg("未开启支付宝快捷登录");
 
 if(isset($_GET['sid'])){
-	// 客户端不可控制 session id 以防止会话固定（CWE-384）。
-	// 如需跨扫码页与轮询页传递状态，请使用不可预测的 state 参数：
-	//   $state = bin2hex(random_bytes(16));
-	//   $_SESSION['oauth_state'] = $state; $_SESSION['oauth_state_exp'] = time()+600;
-	//   // 扫码页把 $state 编入二维码 URL，轮询页用 hash_equals 校验
+	// 已移除：客户端不可设置 session id（CWE-384 会话固定）
 }
-session_start();
+if(isset($_GET['qtoken'])){
+	session_start();
+	$_SESSION['alipay_oauth_token'] = trim($_GET['qtoken']);
+}else{
+	session_start();
+}
 
 if(isset($_GET['act']) && $_GET['act']=='login'){
-	if(isset($_SESSION['alipay_uid']) && !empty($_SESSION['alipay_uid'])){
-		$alipay_uid = daddslashes($_SESSION['alipay_uid']);
-		$userrow=$DB->getRow("SELECT * FROM pre_user WHERE alipay_uid='{$alipay_uid}' limit 1");
+	$alipay_uid = null;
+	$user_type = 'userid';
+	$appid = null;
+	if(isset($_SESSION['alipay_oauth_token'])){
+		$cacheData = $CACHE->read('alipay_oauth_' . $_SESSION['alipay_oauth_token']);
+		if($cacheData){
+			$info = json_decode($cacheData, true);
+			if($info === null && is_string($cacheData)){
+				$info = @unserialize($cacheData);
+			}
+			if(!empty($info['alipay_uid'])){
+				$alipay_uid = $info['alipay_uid'];
+				$user_type = !empty($info['usertype']) ? $info['usertype'] : 'userid';
+				$appid = !empty($info['appid']) ? $info['appid'] : null;
+			}
+		}
+	}
+	if(!empty($alipay_uid)){
+		$CACHE->delete('alipay_oauth_' . $_SESSION['alipay_oauth_token']);
+		unset($_SESSION['alipay_oauth_token']);
+		$userrow=$DB->getRow("SELECT * FROM pre_user WHERE alipay_uid=:alipay_uid limit 1", [':alipay_uid'=>$alipay_uid]);
 		if($userrow){
 			$uid=$userrow['uid'];
 			$key=$userrow['key'];
@@ -31,10 +50,36 @@ if(isset($_GET['act']) && $_GET['act']=='login'){
 			$secure = is_https();
 			setcookie("user_token", $token, time() + 2592000, '/', '', $secure, true);
 			session_regenerate_id(true);
-			$DB->exec("update `pre_user` set `lasttime`=NOW() where `uid`='$uid'");
+			$DB->update('user', ['lasttime'=>'NOW()'], ['uid'=>$uid]);
 			$result=array("code"=>0,"msg"=>"登录成功！正在跳转到用户中心","url"=>"./");
 		}elseif($islogin2==1){
-			$sds=$DB->exec("update `pre_user` set `alipay_uid`='$alipay_uid' where `uid`='$uid'");
+			$sds=$DB->update('user', ['alipay_uid'=>$alipay_uid], ['uid'=>$uid]);
+			$result=array("code"=>0,"msg"=>"已成功绑定支付宝账号！","url"=>"./editinfo.php");
+		}else{
+			$_SESSION['Oauth_alipay_uid']=$alipay_uid;
+			$result=array("code"=>0,"msg"=>"请输入商户ID和密钥完成绑定和登录","url"=>"./login.php?connect=true");
+		}
+		exit(json_encode($result));
+	}
+	if(isset($_SESSION['alipay_uid']) && !empty($_SESSION['alipay_uid'])){
+		$alipay_uid = daddslashes($_SESSION['alipay_uid']);
+		$userrow=$DB->getRow("SELECT * FROM pre_user WHERE alipay_uid=:alipay_uid limit 1", [':alipay_uid'=>$alipay_uid]);
+		if($userrow){
+			$uid=$userrow['uid'];
+			$key=$userrow['key'];
+			if($islogin2==1){
+				exit('{"code":-1,"msg":"当前支付宝已绑定商户ID:'.$uid.'，请勿重复绑定！"}');
+			}
+			$session=md5($uid.$key.$password_hash);
+			$expiretime=time()+2592000;
+			$token=authcode("{$uid}\t{$session}\t{$expiretime}", 'ENCODE', SYS_KEY);
+			$secure = is_https();
+			setcookie("user_token", $token, time() + 2592000, '/', '', $secure, true);
+			session_regenerate_id(true);
+			$DB->update('user', ['lasttime'=>'NOW()'], ['uid'=>$uid]);
+			$result=array("code"=>0,"msg"=>"登录成功！正在跳转到用户中心","url"=>"./");
+		}elseif($islogin2==1){
+			$sds=$DB->update('user', ['alipay_uid'=>$alipay_uid], ['uid'=>$uid]);
 			$result=array("code"=>0,"msg"=>"已成功绑定支付宝账号！","url"=>"./editinfo.php");
 		}else{
 			$_SESSION['Oauth_alipay_uid']=$alipay_uid;
@@ -69,10 +114,13 @@ if(isset($_GET['auth_code'])){
 		$user_type = 'openid';
 	}
 	if(isset($_GET['state'])){
-		$redirect_uri = authcode(str_replace(' ', '+', $_GET['state']), 'DECODE', SYS_KEY);
+		$state_raw = str_replace(' ', '+', $_GET['state']);
+		$redirect_uri = authcode($state_raw, 'DECODE', SYS_KEY);
 		if($redirect_uri && substr($redirect_uri, 0, 1) == '/'){
 			exit("<script language='javascript'>window.location.replace('{$redirect_uri}?userid={$user_id}&usertype={$user_type}&appid={$channel['appid']}');</script>");
 		}
+		$qtoken = $state_raw;
+		$CACHE->save('alipay_oauth_' . $qtoken, json_encode(['status'=>'done','alipay_uid'=>$user_id,'usertype'=>$user_type,'appid'=>$channel['appid']]), 600);
 	}
 	$_SESSION['alipay_uid'] = $user_id;
 
@@ -94,7 +142,7 @@ if(isset($_GET['auth_code'])){
 		@header('Content-Type: text/html; charset=UTF-8');
 		exit("<script language='javascript'>window.location.href='./';</script>");
 	}elseif($islogin2==1){
-		$sds=$DB->exec("update `pre_user` set `alipay_uid`=:user_id where `uid`='$uid'", [':user_id'=>$user_id]);
+		$sds=$DB->update('user', ['alipay_uid'=>$user_id], ['uid'=>$uid]);
 		@header('Content-Type: text/html; charset=UTF-8');
 		exit("<script language='javascript'>alert('已成功绑定支付宝账号！');window.location.href='./editinfo.php';</script>");
 	}else{
@@ -103,7 +151,7 @@ if(isset($_GET['auth_code'])){
 	}
 
 }elseif($islogin2==1 && isset($_GET['unbind'])){
-	$DB->exec("update `pre_user` set `alipay_uid`=NULL where `uid`='$uid'");
+	$DB->update('user', ['alipay_uid'=>null], ['uid'=>$uid]);
 	@header('Content-Type: text/html; charset=UTF-8');
 	exit("<script language='javascript'>alert('您已成功解绑支付宝账号！');window.location.href='./editinfo.php';</script>");
 }elseif($islogin2==1 && !isset($_GET['bind']) && !isset($_GET['state'])){
@@ -114,13 +162,20 @@ if(isset($_GET['auth_code'])){
 	$alipay_config = require(PLUGIN_ROOT.$channel['plugin'].'/inc/config.php');
 	$oauth = new \Alipay\AlipayOauthService($alipay_config);
 	$redirect_uri = $siteurl.'user/oauth.php';
-	$oauth->oauth($redirect_uri, isset($_GET['state'])?trim($_GET['state']):null);
+	$state = isset($_GET['state']) ? trim($_GET['state']) : null;
+	if(!$state && isset($_SESSION['alipay_oauth_token'])){
+		$state = $_SESSION['alipay_oauth_token'];
+	}
+	$oauth->oauth($redirect_uri, $state);
 }else{
 
-$code_url = $siteurl.'user/oauth.php?sid='.session_id();
-if(isset($_GET['bind'])){
-	$code_url .= '&bind=1';
-}
+	$qtoken = bin2hex(random_bytes(16));
+	$_SESSION['alipay_oauth_token'] = $qtoken;
+	$CACHE->save('alipay_oauth_' . $qtoken, json_encode(['status'=>'waiting']), 600);
+	$code_url = $siteurl.'user/oauth.php?qtoken='.$qtoken;
+	if(isset($_GET['bind'])){
+		$code_url .= '&bind=1';
+	}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

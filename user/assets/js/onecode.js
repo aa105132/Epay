@@ -78,7 +78,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_codename",
-			data : {codename:codename},
+			data : {codename:codename,csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);

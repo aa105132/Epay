@@ -4,10 +4,10 @@
 **/
 $verifycode = 1;//验证码开关
 $login_limit_count = 5;//登录失败次数
-$login_limit_file = '@login.lock';
 
 if(!function_exists("imagecreate") || !file_exists('code.php'))$verifycode=0;
 include("../includes/common.php");
+$login_limit_file = sys_get_temp_dir() . '/epay_login_' . substr(md5(SYS_KEY), 0, 16) . '.lock';
 
 if(isset($_GET['act']) && $_GET['act']=='login'){
   if(!checkRefererHost())exit('{"code":403}');
@@ -23,7 +23,7 @@ if(isset($_GET['act']) && $_GET['act']=='login'){
   }
   $errcount = $DB->getColumn("SELECT count(*) FROM `pre_log` WHERE `ip`=:ip AND `date`>DATE_SUB(NOW(),INTERVAL 1 DAY) AND `uid`=0 AND `type`='登录失败'", [':ip'=>$clientip]);
   if($errcount >= $login_limit_count && file_exists($login_limit_file)){
-    exit(json_encode(['code'=>-1,'msg'=>'多次登录失败，暂时禁止登录。可删除@login.lock文件解除限制']));
+    exit(json_encode(['code'=>-1,'msg'=>'多次登录失败，暂时禁止登录']));
   }
   if($enc_type == '1'){
     $plain = '';
@@ -61,7 +61,7 @@ if(isset($_GET['act']) && $_GET['act']=='login'){
     if($retry_times < 0) $retry_times = 0;
     if($retry_times <= 0){
       file_put_contents($login_limit_file, '1');
-      exit(json_encode(['code'=>-1,'msg'=>'多次登录失败，暂时禁止登录。可删除@login.lock文件解除限制','vcode'=>1]));
+      exit(json_encode(['code'=>-1,'msg'=>'多次登录失败，暂时禁止登录','vcode'=>1]));
     }else{
       exit(json_encode(['code'=>-1,'msg'=>'用户名或密码错误','vcode'=>1]));
     }

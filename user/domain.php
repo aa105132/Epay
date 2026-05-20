@@ -3,6 +3,9 @@ include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $title='授权支付域名';
 include './head.php';
+$csrf_token = md5(mt_rand(0,999).time());
+$_SESSION['csrf_token'] = $csrf_token;
+echo '<script>var user_csrf_token = "'.$csrf_token.'";</script>';
 ?>
 <?php
 
@@ -78,7 +81,7 @@ function addDomain(){
 			$.ajax({
 				type : 'POST',
 				url : 'ajax2.php?act=addDomain',
-				data : {domain: content},
+				data : {domain: content,csrf_token:user_csrf_token},
 				dataType : 'json',
 				success : function(data) {
 					layer.close(ii);
@@ -101,7 +104,7 @@ function delDomain(id) {
 		$.ajax({
 			type : 'POST',
 			url : 'ajax2.php?act=delDomain',
-			data : {id: id},
+			data : {id: id,csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				if(data.code == 0){

@@ -566,9 +566,9 @@ class Pay
 	    if(!empty($money) && (!is_numeric($money) || !preg_match('/^[0-9.]+$/', $money)))throw new Exception('金额输入错误');
         
         if(!empty($queryArr['trade_no'])){
-			$trade_no=daddslashes($queryArr['trade_no']);
+			$trade_no=$queryArr['trade_no'];
 		}elseif(!empty($queryArr['out_trade_no'])){
-			$out_trade_no=daddslashes($queryArr['out_trade_no']);
+			$out_trade_no=$queryArr['out_trade_no'];
             $trade_no = $DB->findColumn('order', 'trade_no', ['out_trade_no'=>$out_trade_no, 'uid'=>$pid]);
             if(!$trade_no) throw new Exception('当前订单不存在！');;
 		}else{
@@ -577,7 +577,7 @@ class Pay
 
         $refund_no = date("YmdHis").rand(11111,99999);
         if(!empty($queryArr['out_refund_no']) && strlen($queryArr['out_refund_no']) > 5){ //判断商户是否重复提交退款
-            $out_refund_no = daddslashes($queryArr['out_refund_no']);
+            $out_refund_no = $queryArr['out_refund_no'];
             $refund_order = $DB->find('refundorder', '*', ['out_refund_no'=>$out_refund_no, 'uid'=>$pid]);
             if($refund_order && $refund_order['status'] == 1){
                 $result = ['code'=>0, 'refund_no'=>$refund_order['refund_no'], 'out_refund_no'=>$refund_order['out_refund_no'], 'trade_no'=>$refund_order['trade_no'], 'uid'=>$refund_order['uid'], 'money'=>$refund_order['money'], 'reducemoney'=>$refund_order['reducemoney'], 'msg'=>'已存在相同退款单号！退款金额¥'.$refund_order['money']];
@@ -601,10 +601,10 @@ class Pay
         if(!$conf['user_refund']) throw new Exception('管理员未开启商户后台自助退款');
 
         if(!empty($queryArr['refund_no'])){
-			$refund_no=daddslashes($queryArr['refund_no']);
+			$refund_no=$queryArr['refund_no'];
             $refund_order = $DB->find('refundorder', '*', ['refund_no'=>$refund_no, 'uid'=>$pid]);
 		}elseif(!empty($queryArr['out_refund_no'])){
-			$out_refund_no=daddslashes($queryArr['out_refund_no']);
+			$out_refund_no=$queryArr['out_refund_no'];
             $refund_order = $DB->find('refundorder', '*', ['out_refund_no'=>$out_refund_no, 'uid'=>$pid]);
 		}else{
             throw new Exception('商户退款单号不能为空');
@@ -625,9 +625,9 @@ class Pay
         $pid=intval($queryArr['pid']);
 
         if(!empty($queryArr['trade_no'])){
-			$trade_no=daddslashes($queryArr['trade_no']);
+			$trade_no=$queryArr['trade_no'];
 		}elseif(!empty($queryArr['out_trade_no'])){
-			$out_trade_no=daddslashes($queryArr['out_trade_no']);
+			$out_trade_no=$queryArr['out_trade_no'];
             $trade_no = $DB->findColumn('order', 'trade_no', ['out_trade_no'=>$out_trade_no, 'uid'=>$pid]);
             if(!$trade_no) throw new Exception('当前订单不存在！');;
 		}else{

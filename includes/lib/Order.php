@@ -117,7 +117,7 @@ class Order
         }
         $refundmoney = !empty($refunded) ? round($refunded + $money, 2) : $money;
         if($mode == 1 && !$conf['refund_fee_type'] && $refundmoney >= $order['realmoney']){
-            $record = $DB->getRow("SELECT * FROM pre_record WHERE trade_no='{$trade_no}' AND (type='订单服务费' OR type='在线收款服务费') LIMIT 1");
+            $record = $DB->getRow("SELECT * FROM pre_record WHERE trade_no=:trade_no AND (type='订单服务费' OR type='在线收款服务费') LIMIT 1", [':trade_no'=>$trade_no]);
             if($record){
                 $addmoney = $record['money'];
                 changeUserMoney($order['uid'], $addmoney, true, '服务费退款', $trade_no);

@@ -12,7 +12,7 @@ class Cache {
 		return $value;
 	}
 	public function save($key ,$value, $expire=0) {
-		if (is_array($value)) $value = serialize($value);
+		if (is_array($value)) $value = json_encode($value, JSON_UNESCAPED_UNICODE);
 		global $DB;
 		if($expire) $expire = time() + $expire;
 		return $DB->exec("REPLACE INTO pre_cache VALUES (:key, :value, :expire)", [':key'=>$key, ':value'=>$value, ':expire'=>$expire]);
@@ -21,7 +21,10 @@ class Cache {
 		global $_CACHE;
 		$_CACHE=array();
 		$cache = $this->read('config');
-		$_CACHE = @unserialize($cache);
+		$_CACHE = @json_decode($cache, true);
+		if($_CACHE === null && is_string($cache)){
+			$_CACHE = @unserialize($cache);
+		}
 		if(empty($_CACHE['version']))$_CACHE = $this->update();
 		return $_CACHE;
 	}

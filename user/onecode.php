@@ -3,6 +3,9 @@ include("../includes/common.php");
 if($islogin2==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $title='聚合收款';
 include './head.php';
+$csrf_token = md5(mt_rand(0,999).time());
+$_SESSION['csrf_token'] = $csrf_token;
+echo '<script>var user_csrf_token = "'.$csrf_token.'";</script>';
 ?>
 <?php
 if(!$conf['onecode'] && $userrow['open_code']!=1)exit('未开启聚合收款');

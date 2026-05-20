@@ -48,7 +48,8 @@ case 'getcount':
 	$tongji_cachetime=getSetting('tongji_cachetime', true);
 	$tongji_cache = $CACHE->read('tongji');
 	if($tongji_cachetime+3600>=time() && $tongji_cache && !isset($_GET['getnew'])){
-		$array = unserialize($tongji_cache);
+		$array = json_decode($tongji_cache, true);
+		if($array === null) $array = @unserialize($tongji_cache);
 		$result=["code"=>0,"type"=>"cache","paytype"=>$paytype,"channel"=>$channel,"count1"=>$count1,"count2"=>$count2,"usermoney"=>round($array['usermoney'],2),"settlemoney"=>round($array['settlemoney'],2),"success_rate"=>$success_rate,"order_today"=>$array['order_today'],"order"=>[]];
 	}else{
 		$usermoney=$DB->getColumn("SELECT SUM(money) FROM pre_user WHERE money!='0.00'");
@@ -96,14 +97,16 @@ case 'getcount':
 		$order_today['profit_paytype']=$profit_paytype;
 
 		saveSetting('tongji_cachetime',time());
-		$CACHE->save('tongji',serialize(["usermoney"=>$usermoney,"settlemoney"=>$settlemoney,"order_today"=>$order_today]));
+		$CACHE->save('tongji',json_encode(["usermoney"=>$usermoney,"settlemoney"=>$settlemoney,"order_today"=>$order_today], JSON_UNESCAPED_UNICODE));
 
 		$result=["code"=>0,"type"=>"online","paytype"=>$paytype,"channel"=>$channel,"count1"=>$count1,"count2"=>$count2,"usermoney"=>round($usermoney,2),"settlemoney"=>round($settlemoney,2),"success_rate"=>$success_rate,"order_today"=>$order_today,"order"=>[]];
 	}
 	for($i=1;$i<7;$i++){
 		$day = date("Ymd", strtotime("-{$i} day"));
 		if($order_tongji = $CACHE->read('order_'.$day)){
-			$result["order"][$day] = unserialize($order_tongji);
+			$tmp = json_decode($order_tongji, true);
+			if($tmp === null) $tmp = @unserialize($order_tongji);
+			$result["order"][$day] = $tmp;
 		}else{
 			break;
 		}
@@ -121,7 +124,10 @@ case 'set':
 	if(isset($_POST['login_apiurl'])){
 		if(!empty($_POST['login_apiurl']) && (substr($_POST['login_apiurl'],0,4)!='http' || substr($_POST['login_apiurl'],-1)!='/'))exit('{"code":-1,"msg":"聚合登录API接口地址格式错误"}');
 	}
+	$deny_keys = ['admin_user','admin_pwd','admin_paypwd','version'];
 	foreach($_POST as $k=>$v){
+		if(!preg_match('/^[a-zA-Z0-9_]+$/', $k)) continue;
+		if(in_array($k, $deny_keys, true)) continue;
 		saveSetting($k, $v);
 	}
 	$ad=$CACHE->clear();
@@ -131,14 +137,12 @@ break;
 case 'setGonggao':
 	$id=intval($_GET['id']);
 	$status=intval($_GET['status']);
-	$sql = "UPDATE pre_anounce SET status='$status' WHERE id='$id'";
-	if($DB->exec($sql))exit('{"code":0,"msg":"修改状态成功！"}');
+	if($DB->update('anounce', ['status'=>$status], ['id'=>$id]))exit('{"code":0,"msg":"修改状态成功！"}');
 	else exit('{"code":-1,"msg":"修改状态失败['.$DB->error().']"}');
 break;
 case 'delGonggao':
 	$id=intval($_GET['id']);
-	$sql = "DELETE FROM pre_anounce WHERE id='$id'";
-	if($DB->exec($sql))exit('{"code":0,"msg":"删除公告成功！"}');
+	if($DB->delete('anounce', ['id'=>$id]))exit('{"code":0,"msg":"删除公告成功！"}');
 	else exit('{"code":-1,"msg":"删除公告失败['.$DB->error().']"}');
 break;
 case 'iptype':
@@ -153,7 +157,7 @@ break;
 case 'setArticle': //文章状态
 	$id=intval($_GET['id']);
 	$active=intval($_GET['active']);
-	$DB->exec("update pre_article set active='$active' where id='{$id}'");
+	$DB->update('article', ['active'=>$active], ['id'=>$id]);
 	exit('{"code":0,"msg":"succ"}');
 break;
 case 'article_upload':

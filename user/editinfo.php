@@ -686,6 +686,7 @@ $(document).ready(function(){
 		$("input[name^='setting']").each(function(i, el) {
 			setting[el.name] =$(this).val();
 		});
+		setting['csrf_token'] = user_csrf_token;
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_channel_info",
@@ -707,7 +708,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_mode",
-			data : {mode:mode},
+			data : {mode:mode, csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);
@@ -726,7 +727,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_voice",
-			data : {voice_devid:voice_devid, voice_order:voice_order},
+			data : {voice_devid:voice_devid, voice_order:voice_order, csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);
@@ -747,7 +748,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_print",
-			data : {print_order:print_order, print_devid:print_devid, print_count:print_count, print_voice:print_voice},
+			data : {print_order:print_order, print_devid:print_devid, print_count:print_count, print_voice:print_voice, csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);
@@ -773,7 +774,7 @@ $(document).ready(function(){
 		$.ajax({
 			type : "POST",
 			url : "ajax2.php?act=edit_msgconfig",
-			data : {notice_order:notice_order, notice_settle:notice_settle, notice_login:notice_login, notice_complain:notice_complain, notice_mchrisk:notice_mchrisk, notice_order_money:notice_order_money, notice_balance:notice_balance, notice_balance_money:notice_balance_money, notice_msgrobot_url:notice_msgrobot_url},
+			data : {notice_order:notice_order, notice_settle:notice_settle, notice_login:notice_login, notice_complain:notice_complain, notice_mchrisk:notice_mchrisk, notice_order_money:notice_order_money, notice_balance:notice_balance, notice_balance_money:notice_balance_money, notice_msgrobot_url:notice_msgrobot_url, csrf_token:user_csrf_token},
 			dataType : 'json',
 			success : function(data) {
 				layer.close(ii);

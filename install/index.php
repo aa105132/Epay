@@ -254,7 +254,7 @@ if(!empty($errorMsg)){
                     <?php if($success>0){?><div class="alert alert-success" role="alert">成功执行SQL语句<?php echo $success;?>条，失败<?php echo $error;?>条！</div><?php }?>
                     <ul class="list-group">
                         <li class="list-group-item">1、系统已成功安装完毕！</li>
-                        <li class="list-group-item">2、后台地址：<a href="/admin/" target="_blank">/admin/</a> 密码:123456</li>
+                        <li class="list-group-item">2、后台地址：<a href="/admin/" target="_blank">/admin/</a>（默认账号 admin，初始密码请查看数据库 pre_config 表或首次登录后立即修改密码）</li>
                         <li class="list-group-item">3、请及时修改后台管理员密码！</li>
                         <?php if(!$lock_status){?><li class="list-group-item">4、<font color="#FF0033">你的空间不支持本地文件读写，请自行在 /install/ 目录建立 install.lock 文件！</font></li><?php }?>
                         <li class="list-group-item"><a href="/" class="btn btn-block btn-default">进入网站首页</a></li>

@@ -294,6 +294,41 @@ function getDevice(){
 	}
 }
 function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
+	if($operation == 'DECODE'){
+		$result = authcode_v2($string, 'DECODE', $key, $expiry);
+		if($result !== '') return $result;
+		return authcode_legacy($string, 'DECODE', $key, $expiry);
+	}
+	return authcode_v2($string, 'ENCODE', $key, $expiry);
+}
+
+function authcode_v2($string, $operation = 'DECODE', $key = '', $expiry = 0) {
+	$key = hash('sha256', $key ?: SYS_KEY, true);
+	$cipher = 'aes-256-gcm';
+	$iv_len = openssl_cipher_iv_length($cipher);
+	$tag_len = 16;
+	if($operation == 'DECODE'){
+		$data = base64_decode(strtr($string, '-_', '+/'));
+		if(strlen($data) < 4 + $iv_len + $tag_len) return '';
+		$expiry_time = unpack('V', substr($data, 0, 4))[1];
+		$iv = substr($data, 4, $iv_len);
+		$tag = substr($data, 4 + $iv_len, $tag_len);
+		$ciphertext = substr($data, 4 + $iv_len + $tag_len);
+		$plaintext = openssl_decrypt($ciphertext, $cipher, $key, OPENSSL_RAW_DATA, $iv, $tag);
+		if($plaintext === false) return '';
+		if($expiry_time > 0 && $expiry_time < time()) return '';
+		return $plaintext;
+	}else{
+		$expiry_time = $expiry ? time() + $expiry : 0;
+		$iv = openssl_random_pseudo_bytes($iv_len);
+		$tag = '';
+		$ciphertext = openssl_encrypt($string, $cipher, $key, OPENSSL_RAW_DATA, $iv, $tag);
+		$data = pack('V', $expiry_time) . $iv . $tag . $ciphertext;
+		return strtr(base64_encode($data), '+/', '-_');
+	}
+}
+
+function authcode_legacy($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 	$ckey_length = 4;
 	$key = md5($key);
 	$keya = md5(substr($key, 0, 16));
@@ -669,7 +704,11 @@ function processOrder(&$srow,$notify=true){
 
 	if($srow['tid']==1){ //商户注册
 		changeUserMoney($srow['uid'], $addmoney, true, '订单收入', $srow['trade_no']);
-		$info = unserialize($CACHE->read('reg_'.$srow['trade_no']));
+		$cacheData = $CACHE->read('reg_'.$srow['trade_no']);
+		$info = json_decode($cacheData, true);
+		if($info === null && is_string($cacheData)){
+			$info = @unserialize($cacheData);
+		}
 		if($info){
 			$key = random(32);
 			$paystatus = $conf['user_review']==1?2:1;

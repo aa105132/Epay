@@ -3,14 +3,14 @@ include("../includes/common.php");
 if($islogin==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $submit2=true;
 
-$trade_no=daddslashes($_GET['trade_no']);
-$order=$DB->getRow("SELECT * FROM pre_order WHERE trade_no='{$trade_no}' LIMIT 1");
+$trade_no=$_GET['trade_no'];
+$order=$DB->getRow("SELECT * FROM pre_order WHERE trade_no=:trade_no LIMIT 1", [':trade_no'=>$trade_no]);
 if(!$order)sysmsg('该订单号不存在，请返回来源地重新发起请求！');
 
-$paytype=$DB->getRow("SELECT id,name,status FROM pre_type WHERE id='{$order['type']}' LIMIT 1");
+$paytype=$DB->getRow("SELECT id,name,status FROM pre_type WHERE id=:id LIMIT 1", [':id'=>$order['type']]);
 if(!$paytype)sysmsg('支付方式不存在');
 
-$channelrow=$DB->getRow("SELECT id,plugin,apptype FROM pre_channel WHERE id='{$order['channel']}' LIMIT 1");
+$channelrow=$DB->getRow("SELECT id,plugin,apptype FROM pre_channel WHERE id=:id LIMIT 1", [':id'=>$order['channel']]);
 if(!$channelrow)sysmsg('支付通道不存在');
 
 $order['typename'] = $paytype['name'];

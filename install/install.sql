@@ -3,7 +3,7 @@ create table `pre_config` (
 `k` varchar(32) NOT NULL,
 `v` text NULL,
 PRIMARY KEY  (`k`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `pre_config` VALUES ('version', '2054');
 INSERT INTO `pre_config` VALUES ('admin_user', 'admin');
@@ -71,7 +71,7 @@ create table `pre_cache` (
   `v` longtext NULL,
   `expire` int(11) NOT NULL DEFAULT '0',
 PRIMARY KEY  (`k`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_anounce`;
 create table `pre_anounce` (
@@ -82,7 +82,7 @@ create table `pre_anounce` (
   `addtime` datetime DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
 PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_type`;
 CREATE TABLE `pre_type` (
@@ -93,7 +93,7 @@ CREATE TABLE `pre_type` (
   `status` tinyint(1) NOT NULL DEFAULT '0',
  PRIMARY KEY (`id`),
  KEY `name` (`name`,`device`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `pre_type` VALUES (1, 'alipay', 0, '支付宝', 1);
 INSERT INTO `pre_type` VALUES (2, 'wxpay', 0, '微信支付', 1);
@@ -112,7 +112,7 @@ CREATE TABLE `pre_plugin` (
   `types` varchar(50) DEFAULT NULL,
   `transtypes` varchar(50) DEFAULT NULL,
  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_channel`;
 CREATE TABLE `pre_channel` (
@@ -137,7 +137,7 @@ CREATE TABLE `pre_channel` (
   `timestop` int(11) DEFAULT NULL,
  PRIMARY KEY (`id`),
  KEY `type` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_roll`;
 CREATE TABLE `pre_roll` (
@@ -149,7 +149,7 @@ CREATE TABLE `pre_roll` (
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `index` int(11) NOT NULL DEFAULT '0',
  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=101;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS `pre_weixin`;
 CREATE TABLE `pre_weixin` (
@@ -164,7 +164,7 @@ CREATE TABLE `pre_weixin` (
   `updatetime` datetime DEFAULT NULL,
   `expiretime` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_order`;
 CREATE TABLE `pre_order` (
@@ -216,7 +216,7 @@ CREATE TABLE `pre_order` (
  KEY `bill_trade_no` (`bill_trade_no`),
  KEY `bill_mch_trade_no` (`bill_mch_trade_no`),
  KEY `date` (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_group`;
 CREATE TABLE `pre_group` (
@@ -232,7 +232,7 @@ CREATE TABLE `pre_group` (
   `visible` varchar(30) DEFAULT NULL,
   `index` int(11) NOT NULL DEFAULT 0,
  PRIMARY KEY (`gid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `pre_group` (`gid`, `name`, `info`) VALUES
 (0, '默认用户组', '{"1":{"type":"","channel":"-1","rate":""},"2":{"type":"","channel":"-1","rate":""},"3":{"type":"","channel":"-1","rate":""}}');
@@ -296,7 +296,7 @@ CREATE TABLE `pre_user` (
  PRIMARY KEY (`uid`),
  KEY `email` (`email`),
  KEY `phone` (`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1000;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1000;
 
 DROP TABLE IF EXISTS `pre_settle`;
 CREATE TABLE `pre_settle` (
@@ -323,7 +323,7 @@ CREATE TABLE `pre_settle` (
  KEY `uid` (`uid`),
  KEY `batch` (`batch`),
  KEY `transfer_no` (`transfer_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_log`;
 CREATE TABLE `pre_log` (
@@ -336,7 +336,7 @@ CREATE TABLE `pre_log` (
   `data` text NULL,
   PRIMARY KEY (`id`),
   KEY `logincheck` (`ip`,`date`,`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_record`;
 CREATE TABLE `pre_record` (
@@ -352,7 +352,7 @@ CREATE TABLE `pre_record` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `trade_no` (`trade_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_batch`;
 CREATE TABLE `pre_batch` (
@@ -362,7 +362,7 @@ CREATE TABLE `pre_batch` (
   `time` datetime DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
  PRIMARY KEY (`batch`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_regcode`;
 CREATE TABLE `pre_regcode` (
@@ -378,7 +378,7 @@ CREATE TABLE `pre_regcode` (
   `errcount` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `code` (`to`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_risk`;
 CREATE TABLE `pre_risk` (
@@ -391,7 +391,7 @@ CREATE TABLE `pre_risk` (
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_domain`;
 CREATE TABLE `pre_domain` (
@@ -403,7 +403,7 @@ CREATE TABLE `pre_domain` (
   `endtime` datetime DEFAULT NULL,
  PRIMARY KEY (`id`),
  KEY `domain` (`domain`,`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_psreceiver`;
 CREATE TABLE `pre_psreceiver` (
@@ -421,7 +421,7 @@ CREATE TABLE `pre_psreceiver` (
   `info` varchar(1024) DEFAULT NULL,
  PRIMARY KEY (`id`),
  KEY `channel` (`channel`,`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_psorder`;
 CREATE TABLE `pre_psorder` (
@@ -441,7 +441,7 @@ CREATE TABLE `pre_psorder` (
  PRIMARY KEY (`id`),
  KEY `trade_no` (`trade_no`),
  KEY `addtime` (`addtime`,`delay`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_subchannel`;
 CREATE TABLE `pre_subchannel` (
@@ -457,7 +457,7 @@ CREATE TABLE `pre_subchannel` (
  PRIMARY KEY (`id`),
  KEY `channel` (`channel`),
  KEY `uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_blacklist`;
 CREATE TABLE `pre_blacklist` (
@@ -469,7 +469,7 @@ CREATE TABLE `pre_blacklist` (
   `remark` varchar(80) DEFAULT NULL,
  PRIMARY KEY (`id`),
  UNIQUE KEY `content`(`content`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_wework`;
 CREATE TABLE `pre_wework` (
@@ -483,7 +483,7 @@ CREATE TABLE `pre_wework` (
   `updatetime` datetime DEFAULT NULL,
   `expiretime` datetime DEFAULT NULL,
  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_wxkfaccount`;
 CREATE TABLE `pre_wxkfaccount` (
@@ -498,7 +498,7 @@ CREATE TABLE `pre_wxkfaccount` (
  PRIMARY KEY (`id`),
  KEY `wid`(`wid`),
  UNIQUE KEY `openkfid`(`openkfid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_wxkflog`;
 CREATE TABLE `pre_wxkflog` (
@@ -511,7 +511,7 @@ CREATE TABLE `pre_wxkflog` (
  PRIMARY KEY (`trade_no`),
  KEY `sid`(`sid`),
  KEY `addtime`(`addtime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_transfer`;
 CREATE TABLE `pre_transfer` (
@@ -535,7 +535,7 @@ CREATE TABLE `pre_transfer` (
  PRIMARY KEY (`biz_no`),
  KEY `uid` (`uid`),
  KEY `out_biz_no` (`out_biz_no`,`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_invitecode`;
 CREATE TABLE `pre_invitecode` (
@@ -547,7 +547,7 @@ CREATE TABLE `pre_invitecode` (
   `status` tinyint(1) NOT NULL DEFAULT 0,
  PRIMARY KEY (`id`),
  KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_refundorder`;
 CREATE TABLE `pre_refundorder` (
@@ -563,7 +563,7 @@ CREATE TABLE `pre_refundorder` (
  PRIMARY KEY (`refund_no`),
  KEY `out_refund_no` (`out_refund_no`,`uid`),
  KEY `trade_no` (`trade_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `pre_suborder`;
 CREATE TABLE `pre_suborder` (
@@ -576,4 +576,4 @@ CREATE TABLE `pre_suborder` (
   `settle` tinyint(1) NOT NULL DEFAULT '0',
  PRIMARY KEY (`sub_trade_no`),
  KEY `trade_no` (`trade_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

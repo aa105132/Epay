@@ -22,6 +22,7 @@ class Plugin {
 	}
 
 	static public function getConfig($name){
+		if(empty($name) || !preg_match('/^[a-zA-Z0-9_]+$/', $name)) return false;
 		$filename = PLUGIN_ROOT.$name.'/'.$name.'_plugin.php';
 		$classname = '\\'.$name.'_plugin';
 		if(file_exists($filename)){
@@ -150,6 +151,7 @@ class Plugin {
 	}
 
 	static public function loadClass($plugin, $func, $trade_no){
+		if(empty($plugin) || !preg_match('/^[a-zA-Z0-9_]+$/', $plugin)) throw new Exception('非法插件名称');
 		$filename = PLUGIN_ROOT.$plugin.'/'.$plugin.'_plugin.php';
 		$classname = '\\'.$plugin.'_plugin';
         if (file_exists($filename)) {
@@ -174,6 +176,7 @@ class Plugin {
 
 	
 	static public function exists($name){
+		if(empty($name) || !preg_match('/^[a-zA-Z0-9_]+$/', $name)) return false;
 		$filename = PLUGIN_ROOT.$name.'/'.$name.'_plugin.php';
 		if(file_exists($filename)){
 			return true;
@@ -183,6 +186,7 @@ class Plugin {
 	}
 
 	static public function isrefund($name){
+		if(empty($name) || !preg_match('/^[a-zA-Z0-9_]+$/', $name)) return false;
 		$filename = PLUGIN_ROOT.$name.'/'.$name.'_plugin.php';
 		$classname = '\\'.$name.'_plugin';
 		if(file_exists($filename)){
@@ -207,6 +211,10 @@ class Plugin {
 		}
 		$order['refund_no'] = $refund_no;
 		$order['refundmoney'] = $money;
+		if(empty($channel['plugin']) || !preg_match('/^[a-zA-Z0-9_]+$/', $channel['plugin'])){
+			$message = '非法插件名称';
+			return false;
+		}
 		$filename = PLUGIN_ROOT.$channel['plugin'].'/'.$channel['plugin'].'_plugin.php';
 		$classname = '\\'.$channel['plugin'].'_plugin';
 		$func = 'refund';
@@ -242,6 +250,10 @@ class Plugin {
 			$message = '当前支付通道信息不存在';
 			return false;
 		}
+		if(empty($channel['plugin']) || !preg_match('/^[a-zA-Z0-9_]+$/', $channel['plugin'])){
+			$message = '非法插件名称';
+			return false;
+		}
 		$filename = PLUGIN_ROOT.$channel['plugin'].'/'.$channel['plugin'].'_plugin.php';
 		$classname = '\\'.$channel['plugin'].'_plugin';
 		$func = 'close';
@@ -271,6 +283,9 @@ class Plugin {
 
 	static public function loadForAdmin($func){
 		global $channel;
+		if(empty($channel['plugin']) || !preg_match('/^[a-zA-Z0-9_]+$/', $channel['plugin'])){
+			throw new Exception('非法插件名称');
+		}
 		$filename = PLUGIN_ROOT.$channel['plugin'].'/'.$channel['plugin'].'_plugin.php';
 		$classname = '\\'.$channel['plugin'].'_plugin';
 		if(file_exists($filename)){
@@ -288,6 +303,9 @@ class Plugin {
 	}
 
 	static public function call($func, $channel, $bizParam = null){
+		if(empty($channel['plugin']) || !preg_match('/^[a-zA-Z0-9_]+$/', $channel['plugin'])){
+			return ['code'=>-1, 'msg'=>'非法插件名称'];
+		}
 		$filename = PLUGIN_ROOT.$channel['plugin'].'/'.$channel['plugin'].'_plugin.php';
 		$classname = '\\'.$channel['plugin'].'_plugin';
 		if(file_exists($filename)){

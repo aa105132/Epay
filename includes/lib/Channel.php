@@ -5,7 +5,7 @@ class Channel {
 
 	static public function get($id, $channelinfo=null){
 		global $DB;
-		$value=$DB->getRow("SELECT * FROM pre_channel WHERE id='$id' LIMIT 1");
+		$value=$DB->getRow("SELECT * FROM pre_channel WHERE id=:id LIMIT 1", [':id'=>$id]);
 		if(!$value) return null;
 		$channel = ['id'=>$value['id'], 'name'=>$value['name'], 'mode'=>$value['mode'], 'type'=>$value['type'], 'plugin'=>$value['plugin'], 'apptype'=>$value['apptype'], 'appwxmp'=>$value['appwxmp'], 'appwxa'=>$value['appwxa'], 'costrate'=>$value['costrate'], 'daytop'=>$value['daytop'], 'daymaxorder'=>$value['daymaxorder']];
 
@@ -28,7 +28,7 @@ class Channel {
 
 	static public function getSub($id){
 		global $DB;
-		$value=$DB->getRow("SELECT A.*,B.info,B.id subid,B.name subname FROM pre_subchannel B INNER JOIN pre_channel A ON B.channel=A.id WHERE B.id='$id'");
+		$value=$DB->getRow("SELECT A.*,B.info,B.id subid,B.name subname FROM pre_subchannel B INNER JOIN pre_channel A ON B.channel=A.id WHERE B.id=:id", [':id'=>$id]);
 		if(!$value) return null;
 		$channel = ['id'=>$value['id'], 'subid'=>$value['subid'], 'name'=>$value['name'], 'subname'=>$value['subname'], 'mode'=>$value['mode'], 'type'=>$value['type'], 'plugin'=>$value['plugin'], 'apptype'=>$value['apptype'], 'appwxmp'=>$value['appwxmp'], 'appwxa'=>$value['appwxa'], 'costrate'=>$value['costrate'], 'daytop'=>$value['daytop'], 'daymaxorder'=>$value['daymaxorder']];
 
@@ -61,7 +61,7 @@ class Channel {
 
 	static public function getGroup($gid){
 		global $DB;
-		$group=$DB->getRow("SELECT * FROM pre_group WHERE gid='{$gid}' LIMIT 1");
+		$group=$DB->getRow("SELECT * FROM pre_group WHERE gid=:gid LIMIT 1", [':gid'=>$gid]);
 		if(!$group)$group=$DB->getRow("SELECT * FROM pre_group WHERE gid=0 LIMIT 1");
 		$info = json_decode($group['info'],true);
 
@@ -84,10 +84,10 @@ class Channel {
 
 	static public function info($id, $gid = 0){
 		global $DB;
-		$value=$DB->getRow("SELECT id,plugin,type,rate,apptype,mode,paymin,paymax FROM pre_channel WHERE id='$id' LIMIT 1");
+		$value=$DB->getRow("SELECT id,plugin,type,rate,apptype,mode,paymin,paymax FROM pre_channel WHERE id=:id LIMIT 1", [':id'=>$id]);
 		$money_rate = $value['rate'];
-		if($gid>0)$groupinfo=$DB->getColumn("SELECT info FROM pre_group WHERE gid='$gid' LIMIT 1");
-		if(!$groupinfo)$groupinfo=$DB->getColumn("SELECT info FROM pre_group WHERE gid=0 LIMIT 1");
+		if($gid>0)$groupinfo=$DB->findColumn('group', 'info', ['gid'=>$gid]);
+		if(!$groupinfo)$groupinfo=$DB->findColumn('group', 'info', ['gid'=>0]);
 		if($groupinfo){
 			$info = json_decode($groupinfo,true);
 			$groupinfo = $info[$value['type']];
@@ -100,7 +100,7 @@ class Channel {
 
 	static public function getWeixin($id){
 		global $DB;
-		$value=$DB->getRow("SELECT * FROM pre_weixin WHERE id='$id' LIMIT 1");
+		$value=$DB->getRow("SELECT * FROM pre_weixin WHERE id=:id LIMIT 1", [':id'=>$id]);
 		return $value;
 	}
 
@@ -123,7 +123,7 @@ class Channel {
 	// 支付提交处理2（输入支付方式ID）
 	static public function submit2($typeid, $uid=0, $gid=0, $money=0){
 		global $DB;
-		$paytype=$DB->getRow("SELECT id,name,status FROM pre_type WHERE id='$typeid' LIMIT 1");
+		$paytype=$DB->getRow("SELECT id,name,status FROM pre_type WHERE id=:typeid LIMIT 1", [':typeid'=>$typeid]);
 		if(!$paytype || $paytype['status']==0)sysmsg('支付方式(type)不存在');
 		$typename = $paytype['name'];
 
@@ -133,8 +133,8 @@ class Channel {
 	//获取通道、插件、费率信息
 	static public function getSubmitInfo($typeid, $typename, $uid, $gid, $money, $sub_mch_id=0){
 		global $DB;
-		if($gid>0)$groupinfo=$DB->getColumn("SELECT info FROM pre_group WHERE gid='$gid' LIMIT 1");
-		if(!$groupinfo)$groupinfo=$DB->getColumn("SELECT info FROM pre_group WHERE gid=0 LIMIT 1");
+		if($gid>0)$groupinfo=$DB->findColumn('group', 'info', ['gid'=>$gid]);
+		if(!$groupinfo)$groupinfo=$DB->findColumn('group', 'info', ['gid'=>0]);
 		if($groupinfo){
 			$info = json_decode($groupinfo,true);
 			$groupinfo = $info[$typeid];
@@ -150,7 +150,7 @@ class Channel {
 				return false;
 			}
 			elseif($channel==-1){ //随机可用通道
-				$rows=$DB->getAll("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type='$typeid' AND status=1 AND daystatus=0 ORDER BY id ASC");
+				$rows=$DB->getAll("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type=:typeid AND status=1 AND daystatus=0 ORDER BY id ASC", [':typeid'=>$typeid]);
 				if(count($rows)>0){
 					$newrows = [];
 					foreach($rows as $row){
@@ -176,7 +176,7 @@ class Channel {
 				}
 			}
 			elseif($channel==-4){ //顺序可用通道
-				$rows=$DB->getAll("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type='$typeid' AND status=1 AND daystatus=0 ORDER BY id ASC");
+				$rows=$DB->getAll("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type=:typeid AND status=1 AND daystatus=0 ORDER BY id ASC", [':typeid'=>$typeid]);
 				if(count($rows)>0){
 					$newrows = [];
 					foreach($rows as $row){
@@ -193,17 +193,17 @@ class Channel {
 						$newrows[] = $row;
 					}
 					if(count($newrows)==0) return false;
-					$index = $DB->getColumn("SELECT `index` FROM pre_group WHERE gid='$gid' LIMIT 1");
+					$index = $DB->findColumn('group', '`index`', ['gid'=>$gid]);
 					$index = $index % count($newrows);
 					$row = $newrows[$index];
 					$index = ($index + 1) % count($newrows);
-					$DB->exec("UPDATE pre_group SET `index`='$index' WHERE gid='$gid'");
+					$DB->update('group', ['index'=>$index], ['gid'=>$gid]);
 					if(empty($money_rate))$money_rate = $row['rate'];
 					return ['typeid'=>$typeid, 'typename'=>$typename, 'plugin'=>$row['plugin'], 'channel'=>$row['id'], 'subchannel'=>0, 'rate'=>$money_rate, 'apptype'=>$row['apptype'], 'mode'=>$row['mode'], 'paymin'=>$row['paymin'], 'paymax'=>$row['paymax']];
 				}
 			}
 			elseif($channel==-5){ //首个可用通道
-				$rows=$DB->getAll("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type='$typeid' AND status=1 AND daystatus=0 ORDER BY id ASC");
+				$rows=$DB->getAll("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type=:typeid AND status=1 AND daystatus=0 ORDER BY id ASC", [':typeid'=>$typeid]);
 				if(count($rows)>0){
 					$newrows = [];
 					foreach($rows as $row){
@@ -226,11 +226,13 @@ class Channel {
 				}
 			}
 			elseif($channel==-2){ //用户自定义子通道
+				$params = [':uid'=>$uid, ':typeid'=>$typeid];
 				$sql = "";
 				if($sub_mch_id>0){
-					$sql = " AND B.apply_id='$sub_mch_id'";
+					$sql = " AND B.apply_id=:sub_mch_id";
+					$params[':sub_mch_id'] = $sub_mch_id;
 				}
-				$rows=$DB->getAll("SELECT A.id,plugin,A.status,rate,apptype,mode,paymin,paymax,B.id subid,timestart,timestop FROM pre_subchannel B INNER JOIN pre_channel A ON B.channel=A.id WHERE B.uid='$uid' AND A.type='$typeid' AND A.status=1 AND B.status=1 AND daystatus=0{$sql} ORDER BY B.usetime ASC");
+				$rows=$DB->getAll("SELECT A.id,plugin,A.status,rate,apptype,mode,paymin,paymax,B.id subid,timestart,timestop FROM pre_subchannel B INNER JOIN pre_channel A ON B.channel=A.id WHERE B.uid=:uid AND A.type=:typeid AND A.status=1 AND B.status=1 AND daystatus=0{$sql} ORDER BY B.usetime ASC", $params);
 				if(count($rows)>0){
 					$newrows = [];
 					foreach($rows as $row){
@@ -252,12 +254,12 @@ class Channel {
 						$row = $rows[0];
 					}
 					if(empty($money_rate))$money_rate = $row['rate'];
-					$DB->exec("UPDATE pre_subchannel SET usetime=NOW() WHERE id='{$row['subid']}'");
+					$DB->update('subchannel', ['usetime'=>'NOW()'], ['id'=>$row['subid']]);
 					return ['typeid'=>$typeid, 'typename'=>$typename, 'plugin'=>$row['plugin'], 'channel'=>$row['id'], 'subchannel'=>$row['subid'], 'rate'=>$money_rate, 'apptype'=>$row['apptype'], 'mode'=>$row['mode'], 'paymin'=>$row['paymin'], 'paymax'=>$row['paymax']];
 				}
 			}
 			elseif($channel==-3){ //随机可用轮询组
-				$rows = $DB->getAll("SELECT * FROM pre_roll WHERE type='$typeid' AND status=1 LIMIT 1");
+				$rows = $DB->getAll("SELECT * FROM pre_roll WHERE type=:typeid AND status=1 LIMIT 1", [':typeid'=>$typeid]);
 				if(count($rows)>0){
 					$row = $rows[array_rand($rows)];
 					$groupinfo['type'] = 'roll';
@@ -275,13 +277,13 @@ class Channel {
 					}
 				}
 				//获取轮询组对应通道
-				$row=$DB->getRow("SELECT plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE id='$channel' LIMIT 1");
+				$row=$DB->getRow("SELECT plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE id=:channel LIMIT 1", [':channel'=>$channel]);
 				if(empty($money_rate))$money_rate = $row['rate'];
 				return ['typeid'=>$typeid, 'typename'=>$typename, 'plugin'=>$row['plugin'], 'channel'=>$channel, 'subchannel'=>0, 'rate'=>$money_rate, 'apptype'=>$row['apptype'], 'mode'=>$row['mode'], 'paymin'=>$row['paymin'], 'paymax'=>$row['paymax'],'timestart'=>$row['timestart'],'timestop'=>$row['timestop']];
 			}
 		}else{
 			//未设置用户组
-			$row=$DB->getRow("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type='$typeid' AND status=1 AND daystatus=0 ORDER BY rand() LIMIT 1");
+			$row=$DB->getRow("SELECT id,plugin,status,rate,apptype,mode,paymin,paymax,timestart,timestop FROM pre_channel WHERE type=:typeid AND status=1 AND daystatus=0 ORDER BY rand() LIMIT 1", [':typeid'=>$typeid]);
 			if($row){
 				return ['typeid'=>$typeid, 'typename'=>$typename, 'plugin'=>$row['plugin'], 'channel'=>$row['id'], 'subchannel'=>0, 'rate'=>$row['rate'], 'apptype'=>$row['apptype'], 'mode'=>$row['mode'], 'paymin'=>$row['paymin'], 'paymax'=>$row['paymax'],'timestart'=>$row['timestart'],'timestop'=>$row['timestop']];
 			}
@@ -302,8 +304,8 @@ class Channel {
 		foreach($rows as $row){
 			$paytype[$row['id']] = $row;
 		}
-		if($gid>0)$groupinfo=$DB->getColumn("SELECT info FROM pre_group WHERE gid='$gid' LIMIT 1");
-		if(!$groupinfo)$groupinfo=$DB->getColumn("SELECT info FROM pre_group WHERE gid=0 LIMIT 1");
+		if($gid>0)$groupinfo=$DB->findColumn('group', 'info', ['gid'=>$gid]);
+		if(!$groupinfo)$groupinfo=$DB->findColumn('group', 'info', ['gid'=>0]);
 		if($groupinfo){
 			$info = json_decode($groupinfo,true);
 			foreach($info as $id=>$row){
@@ -311,7 +313,7 @@ class Channel {
 				if($row['channel']==0){
 					unset($paytype[$id]);
 				}elseif($row['channel']==-1 || $row['channel']==-4 || $row['channel']==-5){
-					$channel=$DB->getRow("SELECT rate,status FROM pre_channel WHERE type='$id' AND status=1 LIMIT 1");
+					$channel=$DB->getRow("SELECT rate,status FROM pre_channel WHERE type=:id AND status=1 LIMIT 1", [':id'=>$id]);
 					if(!$channel){
 						unset($paytype[$id]);
 					}elseif(empty($row['rate'])){
@@ -320,7 +322,7 @@ class Channel {
 						$paytype[$id]['rate']=$row['rate'];
 					}
 				}elseif($row['channel']==-2){
-					$channel=$DB->getRow("SELECT A.id,A.status,rate FROM pre_subchannel B INNER JOIN pre_channel A ON B.channel=A.id WHERE B.uid='$uid' AND A.type='$id' AND A.status=1 AND B.status=1 LIMIT 1");
+					$channel=$DB->getRow("SELECT A.id,A.status,rate FROM pre_subchannel B INNER JOIN pre_channel A ON B.channel=A.id WHERE B.uid=:uid AND A.type=:id AND A.status=1 AND B.status=1 LIMIT 1", [':uid'=>$uid, ':id'=>$id]);
 					if(!$channel){
 						unset($paytype[$id]);
 					}elseif(empty($row['rate'])){
@@ -329,7 +331,7 @@ class Channel {
 						$paytype[$id]['rate']=$row['rate'];
 					}
 				}elseif($row['channel']==-3){
-					$channel=$DB->getRow("SELECT id,status FROM pre_roll WHERE type='$id' AND status=1 LIMIT 1");
+					$channel=$DB->getRow("SELECT id,status FROM pre_roll WHERE type=:id AND status=1 LIMIT 1", [':id'=>$id]);
 					if(!$channel){
 						unset($paytype[$id]);
 					}else{
@@ -337,10 +339,10 @@ class Channel {
 					}
 				}else{
 					if($row['type']=='roll'){
-						$status=$DB->getColumn("SELECT status FROM pre_roll WHERE id='{$row['channel']}' LIMIT 1");
+						$status=$DB->findColumn('roll', 'status', ['id'=>$row['channel']]);
 					}else{
-						$status=$DB->getColumn("SELECT status FROM pre_channel WHERE id='{$row['channel']}' LIMIT 1");
-						if(empty($row['rate'])) $row['rate'] = $DB->getColumn("SELECT rate FROM pre_channel WHERE id='{$row['channel']}' LIMIT 1");
+						$status=$DB->findColumn('channel', 'status', ['id'=>$row['channel']]);
+						if(empty($row['rate'])) $row['rate'] = $DB->findColumn('channel', 'rate', ['id'=>$row['channel']]);
 					}
 					if(!$status || $status==0)unset($paytype[$id]);
 					else $paytype[$id]['rate']=$row['rate'];
@@ -348,10 +350,10 @@ class Channel {
 			}
 		}else{
 			foreach($paytype as $id=>$row){
-				$status=$DB->getColumn("SELECT status FROM pre_channel WHERE type='$id' AND status=1 limit 1");
-				if(!$status || $status==0)unset($paytype[$id]);
-				else{
-					$paytype[$id]['rate']=$DB->getColumn("SELECT rate FROM pre_channel WHERE type='$id' AND status=1 limit 1");
+					$status=$DB->findColumn('channel', 'status', ['type'=>$id, 'status'=>1]);
+					if(!$status || $status==0)unset($paytype[$id]);
+					else{
+						$paytype[$id]['rate']=$DB->findColumn('channel', 'rate', ['type'=>$id, 'status'=>1]);
 				}
 			}
 		}
@@ -361,7 +363,7 @@ class Channel {
 	//根据轮询组ID获取支付通道ID
 	static private function getChannelFromRoll($channel, $money){
 		global $DB;
-		$row=$DB->getRow("SELECT * FROM pre_roll WHERE id='$channel' LIMIT 1");
+		$row=$DB->getRow("SELECT * FROM pre_roll WHERE id=:channel LIMIT 1", [':channel'=>$channel]);
 		if($row['status']==1){
 			$info = self::rollinfo_decode($row['info'],true);
 
@@ -371,7 +373,10 @@ class Channel {
 				$channelids[] = $inforow['name'];
 			}
 			$channelids = implode(',',$channelids);
-			$rows=$DB->getAll("SELECT id,paymin,paymax,timestart,timestop FROM pre_channel WHERE id IN ($channelids) AND status=1 AND daystatus=0");
+			$arr = explode(',', $channelids);
+			if(count($arr) == 0) return false;
+			$ph = implode(',', array_fill(0, count($arr), '?'));
+			$rows=$DB->getAll("SELECT id,paymin,paymax,timestart,timestop FROM pre_channel WHERE id IN ($ph) AND status=1 AND daystatus=0", $arr);
 			$newids = [];
 			foreach($rows as $channelrow){
 				if($money>0 && !empty($channelrow['paymin']) && $channelrow['paymin']>0 && $money<$channelrow['paymin'])continue;
@@ -401,7 +406,7 @@ class Channel {
 				$index = $row['index'] % count($newinfo);
 				$channel = $newinfo[$index]['name'];
 				$index = ($row['index'] + 1) % count($newinfo);
-				$DB->exec("UPDATE pre_roll SET `index`='$index' WHERE id='{$row['id']}'");
+				$DB->update('roll', ['index'=>$index], ['id'=>$row['id']]);
 			}
 			return $channel;
 		}

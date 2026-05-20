@@ -38,12 +38,7 @@ if(!function_exists("is_https")){
 
 $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
 $host = preg_replace('/:\d+$/', '', $host);
-$allowed_hosts = defined('ALLOWED_HOSTS') ? ALLOWED_HOSTS : [];
-if(!empty($allowed_hosts) && !in_array($host, $allowed_hosts, true)){
-	http_response_code(400);
-	exit('invalid host');
-}
-$siteurl = (is_https() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].'/';
+$siteurl = (is_https() ? 'https://' : 'http://').$host.'/';
 
 include_once(SYSTEM_ROOT."autoloader.php");
 Autoloader::register();
@@ -74,6 +69,15 @@ exit();
 
 $CACHE=new \lib\Cache();
 $conf=$CACHE->pre_fetch();
+
+if(defined('ALLOWED_HOSTS') || !empty($conf['allowed_hosts'])){
+	$allowed_hosts = defined('ALLOWED_HOSTS') ? ALLOWED_HOSTS : array_map('trim', explode(',', $conf['allowed_hosts']));
+	if(!empty($allowed_hosts) && !in_array($host, $allowed_hosts, true)){
+		http_response_code(400);
+		exit('invalid host');
+	}
+}
+
 define('SYS_KEY', $conf['syskey']);
 if(!$conf['localurl'])$conf['localurl'] = $siteurl;
 $password_hash='!@#%!s!0';
