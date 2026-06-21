@@ -7,3 +7,6 @@ lakala_log.txt
 gateway.txt
 .DS_Store
 Thumbs.db
+
+# 本地 PHP 内置服务器预览路由，仅本地调试用
+.preview-router.php
