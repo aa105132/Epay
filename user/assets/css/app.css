@@ -697,6 +697,9 @@ body {
 .app-header {
   z-index: 1025;
   border-radius: 0;
+  height: 50px;
+  max-height: 50px;
+  overflow: hidden;
 }
 
 .app-aside {
@@ -887,12 +890,17 @@ body {
 .navbar-brand {
   display: inline-block;
   float: none;
-  height: auto;
+  height: 50px;
+  max-width: 100%;
   padding: 0 20px;
   font-size: 20px;
   font-weight: 700;
   line-height: 50px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 .navbar-brand:hover {

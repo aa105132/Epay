@@ -23,8 +23,9 @@ if(!defined('IN_CRONLITE'))exit();
     <script src="/assets/doc/js/home.js"></script>
     <link rel="stylesheet" href="/assets/doc/css/docView.css" />
     <script src="/assets/doc/js/docView.js"></script>
+    <link rel="stylesheet" href="/assets/doc/css/doc-modern.css?v=20260618" />
 </head>
-<body>
+<body class="doc-modern">
     <!-- top-begin -->
     <div id="navbar">
         <div class="bg-blur" style="background: white!important;"></div>
@@ -33,6 +34,9 @@ if(!defined('IN_CRONLITE'))exit();
                 <div class="navRight">
                     <li class="layui-nav-item layui-this" lay-unselect>
                         <a href="/" style="padding-right: 40px;">返回官网</a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a class="doc-download-btn" href="/llm.txt" download>下载 llm.txt</a>
                     </li>
                 </div>
             </ul>

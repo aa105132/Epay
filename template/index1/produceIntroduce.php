@@ -1,271 +1,44 @@
-﻿<?php
+<?php
 if(!defined('IN_CRONLITE'))exit();
 require INDEX_ROOT.'head.php';
 ?>
-<div class="container api_doc">
-	<div class="api_doc_bar">
-		<dl>
-			<dt>
-									<a href="#zfqdId">支付渠道</a>
-								</dt>
-		</dl>
-		<dl>
-			<dt>
-									<a href="#kfzxId">开发中心</a>
-								</dt>
-		</dl>
-		<dl>
-			<dt>
-									<a href="#glzxId">管理中心</a>
-								</dt>
-		</dl>
-		<dl>
-			<dt>
-									<a href="#yyzxId">运营中心</a>
-								</dt>
-		</dl>
-		<dl>
-			<dt>
-									<a href="#cwzxId">财务中心</a>
-								</dt>
-		</dl>
-		<dl>
-			<dt>
-									<a href="#ktsmId">开通说明</a>
-								</dt>
-		</dl>
+<main class="blue-pay-home nav-visual-page product-center-page">
+	<section class="nav-visual-hero">
+		<div class="nav-visual-copy">
+			<p class="blue-kicker">PRODUCT CENTER</p>
+			<h1>把收款能力拆成清晰模块</h1>
+			<p>支付网关、统一收银台、订单管理、异步通知和商户后台保持同一套流程，业务侧只需要围绕订单状态完成接入。</p>
+			<div class="nav-inline-actions">
+				<a class="blue-primary" href="/user/reg.php">注册接入</a>
+				<a class="blue-secondary" href="doc.html">查看文档</a>
+			</div>
+		</div>
+		<div class="nav-visual-art"><img src="/assets/img/generated/nav-product-center-image2.png" alt="产品中心视觉图" /></div>
+	</section>
 
-	</div>
-	<div class="api_doc_content">
-		<div id="zfqdId" class="api_block">
-			<h3>
-				支付渠道
-			</h3>
-			<img style="width:430px;height:430px" src="<?php echo STATIC_ROOT?>picture/yuke01.png" />
-			<h4>
-				PC网页支付
-			</h4>
-			<p>
-				<?php echo h($conf['sitename'])?>,PC网页支付支持支付宝网页支付、支付宝扫码支付、 微信扫码支付、银联网页支付、百度钱包等。
-			</p>
-			<img src="<?php echo STATIC_ROOT?>picture/yuke02.png" />
-			<h4>
-				扫码支付
-			</h4>
-			<p>
-				<?php echo h($conf['sitename'])?>,支持统一扫码支付,渠道扫码支付,包括支付宝扫码支付、 微信扫码支付等。
-			</p>
-			<img src="<?php echo STATIC_ROOT?>picture/yuke04.png" />
-			<h4>
-				微信公众号支付
-			</h4>
-			<p>
-				<?php echo h($conf['sitename'])?>,为微信公众号提供全套支付解决方案： 用户可在你的微信服务号内进行微信 支付，简单便捷！
-			</p>
-			<img src="<?php echo STATIC_ROOT?>picture/yuke03.png" />
-			<h4>
-				手机APP支付
-			</h4>
-			<p>
-				<?php echo h($conf['sitename'])?>,为iOS/Android原生/H5 App提供支付解决方案:支持微信支付、支付宝支付、银联手机支付、百度钱包等。
-			</p>
+	<section class="plain-feature-band">
+		<div class="plain-feature-line strong"><span>01</span><h2>支付网关</h2><p>统一承接商户下单请求，负责参数校验、签名校验和支付入口分发。</p></div>
+		<div class="plain-feature-line"><span>02</span><h2>统一收银台</h2><p>用户进入收银台后选择支付方式，前台流程更清晰。</p></div>
+		<div class="plain-feature-line"><span>03</span><h2>订单中心</h2><p>订单提交、支付中、已支付、异常状态集中展示，便于商户核对。</p></div>
+		<div class="plain-feature-line"><span>04</span><h2>通知回调</h2><p>支付完成后主动推送给业务系统，也可通过查询接口兜底确认。</p></div>
+	</section>
+
+	<section class="thin-process-section">
+		<div>
+			<p class="blue-kicker">CAPABILITY MAP</p>
+			<h2>不用把能力堆成卡片，流程本身就应该清楚。</h2>
 		</div>
-		<div id="kfzxId" class="api_block">
-			<h3>
-				开发中心
-			</h3>
-			<div class="row">
-				<div class="4u 4u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-code round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								集成开发
-							</h4>
-						</div>
-					</div>
-				</div>
-				<div class="4u 4u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-shield round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								安全设置
-							</h4>
-						</div>
-					</div>
-				</div>
-				<div class="4u 4u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-wrench round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								渠道配置
-							</h4>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="glzxId" class="api_block">
-			<h3>
-				管理中心
-			</h3>
-			<div class="row">
-				<div class="4u 4u(mobile)">
-					<div class="fund_text align-center">
-						<img src="<?php echo STATIC_ROOT?>picture/kf02.png" />
-						<div class="content">
-							<h4>
-								开发人员
-							</h4>
-						</div>
-					</div>
-				</div>
-				<div class="4u 4u(mobile)">
-					<div class="fund_text align-center">
-						<img src="<?php echo STATIC_ROOT?>picture/kf01.png" />
-						<div class="content">
-							<h4>
-								运营人员
-							</h4>
-						</div>
-					</div>
-				</div>
-				<div class="4u 4u(mobile)">
-					<div class="fund_text align-center">
-						<img src="<?php echo STATIC_ROOT?>picture/kf03.png" />
-						<div class="content">
-							<h4>
-								财务人员
-							</h4>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="yyzxId" class="api_block">
-			<h3>
-				运营中心
-			</h3>
-			<div class="row">
-				<div class="6u 6u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-gears round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								配置
-							</h4>
-							<p>
-								风控、分账、费用、营销、结算
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="6u 6u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-bar-chart round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								报表
-							</h4>
-							<p>
-								资金流水报表、日报表、汇总报表
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="cwzxId" class="api_block">
-			<h3>
-				财务中心
-			</h3>
-			<div class="row">
-				<div class="6u 6u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-list-ol round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								对账
-							</h4>
-							<p>
-								系统自动对账、对账结果查询、对账处理
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="6u 6u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-database round_icon round_border"></i>
-						<div class="content">
-							<h4>
-								财务
-							</h4>
-							<p>
-								余额调整、相关审核、批量出款、T+n自动结算
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="ktsmId" class="api_block">
-			<h3>
-				开通说明
-			</h3>
-			<div class="row">
-				<div class="4u 12u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-edit featured"></i>
-						<div class="content">
-							<h4>
-								注册
-							</h4>
-							<p>
-								您可以免费申请账号，使用开发的相关功能。
-							</p>
-							<p>
-								<a href="/user/reg.php" target="_blank">去注册</a>
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="4u 12u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-file-code-o featured alt"></i>
-						<div class="content">
-							<h4>
-								集成
-							</h4>
-							<p>
-								开发人员根据文档说明配置相关的信息.下载SDK与DEMO进行集成.
-							</p>
-							<p>
-								<a href="doc.html" target="_blank">查看文档</a>&nbsp;&nbsp;&nbsp;
-								<a href="SDK.zip" target="_blank">下载SDK</a>
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="4u 12u(mobile)">
-					<div class="fund_text align-center">
-						<i class="icon fa-check-square-o featured alt2"></i>
-						<div class="content">
-							<h4>
-								开通
-							</h4>
-							<p>
-								正式开通如果有个性化定制需求，请线下联系我们
-							</p>
-							<p>
-								<a href="aboutUs.html" target="_blank">联系我们</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+		<ol class="thin-process-list">
+			<li><b>提交订单</b><span>商户按标准参数发起支付请求</span></li>
+			<li><b>生成入口</b><span>平台返回支付链接或收银台页面</span></li>
+			<li><b>完成支付</b><span>用户按业务选择对应支付方式</span></li>
+			<li><b>同步状态</b><span>回调通知与主动查询共同确认结果</span></li>
+		</ol>
+	</section>
+</main>
+<script>
+	(function($) {
+		$('body').addClass('landing modern-landing blue-pay-page nav-visual-body');
+	})(jQuery);
+</script>
 <?php require INDEX_ROOT.'foot.php';?>

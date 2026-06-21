@@ -35,16 +35,35 @@ var ajaxSetting = {
 	},
 };
 var loadingHandler;
+function normalizeDocUrl(url) {
+	if (!url) return '';
+	if (url.charAt(0) === '#' || /^https?:\/\//i.test(url)) return url;
+	if (url.charAt(0) === '/') return url;
+	return '/doc/' + url.replace(/^\.\//, '');
+}
+
+function currentDocPath() {
+	var path = location.pathname;
+	if (path === '/doc.html' || path === '/doc/' || path === '/doc') return '/doc/index.html';
+	return path + location.hash;
+}
+
 function switchNode(event, treeId, treeNode) {
+	var targetUrl = normalizeDocUrl(treeNode.url);
+	if (!targetUrl) {
+		menuTree.expandNode(treeNode, !treeNode.open);
+		event.preventDefault();
+		return;
+	}
 	if ('pushState' in history) {
-		history.pushState('', '', treeNode.url);
-		getChapter(treeNode.url);
+		history.pushState('', '', targetUrl);
+		getChapter(targetUrl);
 	}
 	else {
-		location = treeNode.url;
+		location = targetUrl;
 	}
-	menuTree.expandNode(treeNode, true)
-	event.preventDefault()
+	menuTree.expandNode(treeNode, true);
+	event.preventDefault();
 }
 
 function getChapter(url) {
@@ -71,7 +90,7 @@ function getChapter(url) {
 				}
 				else {
 					// 有时切换文档不在最上面
-					$('#content_body').scrollTop(0)
+					$('#body, #content_body').scrollTop(0)
 				}
 			}
 			catch (err) {
@@ -103,22 +122,22 @@ function addDiyDom(treeId, treeNode) {
 function initTree(data) {
 	for (var i in data) {
 		data[i].target = '_self';
+		if (data[i].url) data[i].url = normalizeDocUrl(data[i].url);
 	}
 	if (null === menuTree) {
 		var treeObj = $("#treeDirectory");
 		$.fn.zTree.init(treeObj, ajaxSetting, data);
 		menuTree = $.fn.zTree.getZTreeObj("treeDirectory");
-		var nodes = menuTree.getNodesByParam('url', location.pathname + location.hash, null);
+		menuTree.expandAll(true);
+		var nodes = menuTree.getNodesByParam('url', currentDocPath(), null);
 		if (nodes.length > 0) {
-			if (nodes.length > 1) {
-				if (menuTree.getSelectedNodes().length > 0) {
-					return;
-				}
-			}
 			menuTree.selectNode(nodes[0]);
+			var parent = nodes[0].getParentNode && nodes[0].getParentNode();
+			if (parent) menuTree.expandNode(parent, true);
 		}
-		else {
-			menuTree.selectNode(menuTree.getNodeByParam('id', currentCatalog.id, null));
+		else if (typeof currentCatalog !== 'undefined' && currentCatalog && currentCatalog.id) {
+			var fallback = menuTree.getNodeByParam('id', currentCatalog.id, null);
+			if (fallback) menuTree.selectNode(fallback);
 		}
 	}
 }

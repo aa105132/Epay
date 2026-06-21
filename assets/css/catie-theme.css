@@ -1,0 +1,724 @@
+/* ============================================================
+   Material 3 Vibe Skin for Epay
+   作用域: html.catie-skin  (日间 .catie-day / 夜间 .catie-night)
+   仅覆盖外观，不改 flatkit/Bootstrap 的布局尺寸。
+   仅在 user/ 商户中心 与 admin/ 后台 注入，不影响收银台/首页。
+   设计系统: Material 3 — 角色化 token、surface 分层、含蓄 elevation、
+   pill 状激活指示、无侧边色条、无渐变文字。
+   ============================================================ */
+
+/* ---------- 形状 / 间距 / 动效 token（与明暗无关） ---------- */
+.catie-skin {
+  --md-shape-xs: 8px;
+  --md-shape-sm: 10px;
+  --md-shape-md: 12px;
+  --md-shape-lg: 16px;
+  --md-shape-xl: 24px;
+  --md-shape-full: 999px;
+
+  --md-space-1: 4px;
+  --md-space-2: 8px;
+  --md-space-3: 12px;
+  --md-space-4: 16px;
+  --md-space-5: 24px;
+  --md-space-6: 32px;
+  --md-space-7: 48px;
+
+  --md-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --md-dur-short: 150ms;
+  --md-dur-medium: 250ms;
+
+  --md-font: "Segoe UI", system-ui, -apple-system, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Noto Sans SC",
+    "Source Han Sans SC", sans-serif;
+}
+
+/* ---------- 日间 · Material 3 浅色 ---------- */
+.catie-skin.catie-day {
+  /* 主色：深邃钴蓝（支付平台，可信、稳重） */
+  --md-primary: oklch(0.50 0.16 256);
+  --md-on-primary: oklch(0.99 0.01 256);
+  --md-primary-container: oklch(0.91 0.05 256);
+  --md-on-primary-container: oklch(0.20 0.06 256);
+
+  /* 次色：沉静青绿 */
+  --md-secondary: oklch(0.52 0.07 210);
+  --md-on-secondary: oklch(0.99 0.01 210);
+  --md-secondary-container: oklch(0.90 0.035 210);
+  --md-on-secondary-container: oklch(0.22 0.05 210);
+
+  /* 三色：暖琥珀（呼应品牌 logo 的橙调，仅做强调） */
+  --md-tertiary: oklch(0.66 0.14 62);
+  --md-on-tertiary: oklch(0.99 0.01 62);
+  --md-tertiary-container: oklch(0.92 0.06 62);
+  --md-on-tertiary-container: oklch(0.28 0.09 62);
+
+  --md-error: oklch(0.54 0.21 25);
+  --md-on-error: oklch(0.99 0.01 25);
+  --md-error-container: oklch(0.90 0.05 25);
+  --md-on-error-container: oklch(0.24 0.07 25);
+
+  /* 中性面：向主色轻微偏色，营造潜意识的统一感 */
+  --md-surface: oklch(0.985 0.004 256);
+  --md-on-surface: oklch(0.22 0.02 256);
+  --md-on-surface-variant: oklch(0.42 0.025 256);
+  --md-surface-dim: oklch(0.94 0.005 256);
+  --md-surface-bright: oklch(0.995 0.003 256);
+  --md-surface-container-lowest: oklch(0.995 0.003 256);
+  --md-surface-container-low: oklch(0.97 0.005 256);
+  --md-surface-container: oklch(0.955 0.006 256);
+  --md-surface-container-high: oklch(0.935 0.007 256);
+  --md-surface-container-highest: oklch(0.915 0.008 256);
+
+  --md-outline: oklch(0.55 0.02 256);
+  --md-outline-variant: oklch(0.85 0.012 256);
+  --md-inverse-surface: oklch(0.30 0.02 256);
+  --md-inverse-on-surface: oklch(0.96 0.006 256);
+  --md-inverse-primary: oklch(0.78 0.11 256);
+
+  --md-success: oklch(0.56 0.13 150);
+  --md-success-container: oklch(0.92 0.05 150);
+  --md-on-success-container: oklch(0.24 0.06 150);
+  --md-warning: oklch(0.68 0.15 70);
+  --md-warning-container: oklch(0.93 0.06 70);
+  --md-on-warning-container: oklch(0.30 0.08 70);
+
+  --md-e1: 0 1px 2px 0 oklch(0.20 0.02 256 / 0.18), 0 1px 3px 1px oklch(0.20 0.02 256 / 0.10);
+  --md-e2: 0 1px 2px 0 oklch(0.20 0.02 256 / 0.20), 0 2px 6px 2px oklch(0.20 0.02 256 / 0.12);
+  --md-e3: 0 1px 3px 0 oklch(0.20 0.02 256 / 0.22), 0 4px 8px 3px oklch(0.20 0.02 256 / 0.14);
+  --md-scrim: oklch(0.20 0.02 256 / 0.40);
+}
+
+/* ---------- 夜间 · Material 3 深色 ---------- */
+.catie-skin.catie-night {
+  --md-primary: oklch(0.78 0.12 256);
+  --md-on-primary: oklch(0.20 0.06 256);
+  --md-primary-container: oklch(0.38 0.10 256);
+  --md-on-primary-container: oklch(0.90 0.04 256);
+
+  --md-secondary: oklch(0.74 0.06 210);
+  --md-on-secondary: oklch(0.18 0.04 210);
+  --md-secondary-container: oklch(0.34 0.05 210);
+  --md-on-secondary-container: oklch(0.90 0.035 210);
+
+  --md-tertiary: oklch(0.80 0.11 62);
+  --md-on-tertiary: oklch(0.22 0.07 62);
+  --md-tertiary-container: oklch(0.36 0.08 62);
+  --md-on-tertiary-container: oklch(0.90 0.05 62);
+
+  --md-error: oklch(0.76 0.16 25);
+  --md-on-error: oklch(0.22 0.07 25);
+  --md-error-container: oklch(0.36 0.09 25);
+  --md-on-error-container: oklch(0.90 0.04 25);
+
+  --md-surface: oklch(0.18 0.014 256);
+  --md-on-surface: oklch(0.92 0.008 256);
+  --md-on-surface-variant: oklch(0.72 0.014 256);
+  --md-surface-dim: oklch(0.16 0.014 256);
+  --md-surface-bright: oklch(0.24 0.014 256);
+  --md-surface-container-lowest: oklch(0.15 0.012 256);
+  --md-surface-container-low: oklch(0.205 0.014 256);
+  --md-surface-container: oklch(0.235 0.015 256);
+  --md-surface-container-high: oklch(0.27 0.016 256);
+  --md-surface-container-highest: oklch(0.305 0.017 256);
+
+  --md-outline: oklch(0.62 0.018 256);
+  --md-outline-variant: oklch(0.38 0.016 256);
+  --md-inverse-surface: oklch(0.92 0.006 256);
+  --md-inverse-on-surface: oklch(0.24 0.012 256);
+  --md-inverse-primary: oklch(0.50 0.16 256);
+
+  --md-success: oklch(0.74 0.12 150);
+  --md-success-container: oklch(0.34 0.07 150);
+  --md-on-success-container: oklch(0.90 0.04 150);
+  --md-warning: oklch(0.82 0.13 70);
+  --md-warning-container: oklch(0.36 0.08 70);
+  --md-on-warning-container: oklch(0.90 0.05 70);
+
+  --md-e1: 0 1px 3px 0 oklch(0 0 0 / 0.40), 0 1px 2px 0 oklch(0 0 0 / 0.30);
+  --md-e2: 0 2px 6px 2px oklch(0 0 0 / 0.40), 0 1px 2px 0 oklch(0 0 0 / 0.35);
+  --md-e3: 0 4px 8px 3px oklch(0 0 0 / 0.45), 0 1px 3px 0 oklch(0 0 0 / 0.40);
+  --md-scrim: oklch(0 0 0 / 0.55);
+}
+
+/* ---------- 背景 & 全局 ---------- */
+.catie-skin body {
+  font-family: var(--md-font);
+  color: var(--md-on-surface);
+  background-color: var(--md-surface) !important;
+  background-image: none !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.catie-skin,
+.catie-skin button,
+.catie-skin input,
+.catie-skin select,
+.catie-skin textarea {
+  font-family: var(--md-font);
+}
+
+.catie-skin ::selection {
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+/* 滚动条 */
+.catie-skin ::-webkit-scrollbar { width: 10px; height: 10px; }
+.catie-skin ::-webkit-scrollbar-track { background: transparent; }
+.catie-skin ::-webkit-scrollbar-thumb {
+  background: var(--md-outline-variant);
+  border-radius: var(--md-shape-full);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.catie-skin ::-webkit-scrollbar-thumb:hover { background: var(--md-outline); background-clip: content-box; }
+
+/* ---------- 排版 ---------- */
+.catie-skin h1, .catie-skin h2, .catie-skin h3, .catie-skin h4,
+.catie-skin .h1, .catie-skin .h2, .catie-skin .h3, .catie-skin .h4,
+.catie-skin .panel-title,
+.catie-skin .navbar-brand {
+  font-family: var(--md-font);
+  color: var(--md-on-surface);
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+.catie-skin a { color: var(--md-primary); text-decoration: none; }
+.catie-skin a:hover, .catie-skin a:focus { color: var(--md-on-primary-container); text-decoration: underline; }
+
+.catie-skin .text-muted { color: var(--md-on-surface-variant) !important; }
+.catie-skin .text-primary, .catie-skin .text-info,
+.catie-skin .text-primary-dk, .catie-skin .text-info-dk { color: var(--md-primary) !important; }
+.catie-skin .text-success, .catie-skin .text-success-dk { color: var(--md-success) !important; }
+.catie-skin .text-warning { color: var(--md-warning) !important; }
+.catie-skin .text-danger { color: var(--md-error) !important; }
+.catie-skin .text-dark-dk { color: var(--md-on-surface) !important; }
+
+/* flatkit 背景工具类重映射到 surface 层 */
+.catie-skin .bg-light,
+.catie-skin .bg-white { background: var(--md-surface-container-low) !important; color: var(--md-on-surface); }
+.catie-skin .bg-dark,
+.catie-skin .bg-black { background: var(--md-surface-container) !important; color: var(--md-on-surface); }
+.catie-skin .bg-info { background: var(--md-primary-container) !important; color: var(--md-on-primary-container) !important; }
+.catie-skin .bg-success { background: var(--md-success-container) !important; color: var(--md-on-success-container) !important; }
+.catie-skin .bg-warning { background: var(--md-warning-container) !important; color: var(--md-on-warning-container) !important; }
+.catie-skin .bg-danger { background: var(--md-error-container) !important; color: var(--md-on-error-container) !important; }
+
+/* 去掉手绘荧光笔下划线 */
+.catie-skin .wrapper-md > h1::after,
+.catie-skin .panel-heading > .panel-title::after { content: none !important; }
+
+/* ---------- 顶部应用栏 (app bar) ---------- */
+.catie-skin .app-header,
+.catie-skin .navbar,
+.catie-skin .navbar-default {
+  background: var(--md-surface-container) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  box-shadow: var(--md-e1);
+  color: var(--md-on-surface);
+}
+/* 钉死应用栏高度，避免长站名撑高 */
+.catie-skin .app-header {
+  height: 56px !important;
+  max-height: 56px !important;
+  min-height: 56px !important;
+  overflow: hidden !important;
+}
+.catie-skin .app-header-fixed { padding-top: 56px !important; }
+
+.catie-skin .navbar-header,
+.catie-skin .navbar-collapse {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  height: 56px !important;
+  line-height: 56px;
+}
+.catie-skin .navbar-header > button { line-height: 56px; }
+
+.catie-skin .navbar-brand {
+  height: 56px !important;
+  line-height: 56px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  color: var(--md-on-surface) !important;
+  padding: 0 18px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 10px;
+}
+.catie-skin .navbar-brand > i,
+.catie-skin .navbar-brand .fa {
+  color: var(--md-primary);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.catie-skin .navbar-brand:hover { background: var(--md-surface-container-high); color: var(--md-on-surface) !important; text-decoration: none; }
+
+.catie-skin .navbar-default .navbar-nav > li > a,
+.catie-skin .navbar-nav > li > a {
+  color: var(--md-on-surface-variant) !important;
+  line-height: 56px;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: background var(--md-dur-short) var(--md-ease-standard), color var(--md-dur-short) var(--md-ease-standard);
+}
+.catie-skin .navbar-default .navbar-nav > li > a:hover,
+.catie-skin .navbar-nav > li > a:hover,
+.catie-skin .navbar-default .navbar-nav > .active > a {
+  color: var(--md-on-surface) !important;
+  background: var(--md-surface-container-high) !important;
+  border-radius: var(--md-shape-full);
+}
+.catie-skin .navbar-toggle { border-color: var(--md-outline) !important; border-radius: var(--md-shape-xs); }
+.catie-skin .navbar-toggle .icon-bar { background: var(--md-on-surface) !important; }
+
+/* 顶栏头像 */
+.catie-skin .navbar-right .avatar img,
+.catie-skin .navbar-right .thumb-sm img {
+  border-radius: var(--md-shape-full);
+  border: 2px solid var(--md-outline-variant);
+}
+
+/* ---------- 导航抽屉 (navigation drawer) ---------- */
+.catie-skin .app-aside,
+.catie-skin .app-aside .navi-wrap {
+  background: var(--md-surface-container-low) !important;
+}
+.catie-skin .app-aside {
+  border-right: 1px solid var(--md-outline-variant) !important;
+}
+.catie-skin .navi ul.nav > li > a {
+  color: var(--md-on-surface-variant) !important;
+  border-radius: var(--md-shape-full);
+  margin: 2px 12px;
+  padding: 10px 14px;
+  font-weight: 500;
+  transition: background var(--md-dur-short) var(--md-ease-standard), color var(--md-dur-short) var(--md-ease-standard);
+}
+.catie-skin .navi ul.nav > li > a:hover {
+  background: var(--md-surface-container-high) !important;
+  color: var(--md-on-surface) !important;
+}
+/* Material 激活指示：pill 状 primary-container 底色，无侧边色条 */
+.catie-skin .navi ul.nav > li.active > a,
+.catie-skin .navi ul.nav > li.active > a:hover {
+  background: var(--md-primary-container) !important;
+  color: var(--md-on-primary-container) !important;
+  box-shadow: none !important;
+  font-weight: 600;
+}
+.catie-skin .navi ul.nav > li > a .glyphicon,
+.catie-skin .navi ul.nav > li > a .fa { color: inherit; }
+.catie-skin .navi ul.nav > li.active > a .glyphicon,
+.catie-skin .navi ul.nav > li.active > a .fa { color: var(--md-on-primary-container); }
+
+.catie-skin .navi ul.nav .nav-sub { background: transparent !important; padding-left: 28px; }
+.catie-skin .navi ul.nav .nav-sub li a {
+  color: var(--md-on-surface-variant) !important;
+  border-radius: var(--md-shape-full);
+  margin: 2px 8px;
+  padding: 8px 14px;
+  font-weight: 400;
+}
+.catie-skin .navi ul.nav .nav-sub li a:hover { color: var(--md-primary) !important; background: var(--md-surface-container-high) !important; }
+.catie-skin .navi ul.nav .nav-sub li.active a { color: var(--md-on-primary-container) !important; background: var(--md-primary-container) !important; font-weight: 500; }
+
+.catie-skin .navi .text-muted,
+.catie-skin .navi .hidden-folded { color: var(--md-on-surface-variant) !important; letter-spacing: 0.08em; text-transform: none; font-size: 0.72rem; font-weight: 600; }
+.catie-skin .line { background: none !important; border-bottom: 1px solid var(--md-outline-variant); height: 0 !important; margin: 8px 16px; }
+
+/* 抽屉底部进度条（装饰性，Material 化） */
+.catie-skin .app-aside .wrapper { color: var(--md-on-surface-variant); }
+.catie-skin .progress {
+  background: var(--md-surface-container-high) !important;
+  border: none !important;
+  border-radius: var(--md-shape-full) !important;
+  box-shadow: none;
+}
+.catie-skin .progress-bar,
+.catie-skin .progress-bar-info { background: var(--md-primary) !important; }
+.catie-skin .progress-bar-success { background: var(--md-success) !important; }
+.catie-skin .progress-bar-warning { background: var(--md-warning) !important; }
+.catie-skin .progress-bar-danger { background: var(--md-error) !important; }
+
+/* ---------- 卡片 / 面板 (Material surface containers) ---------- */
+.catie-skin .panel,
+.catie-skin .modal-content,
+.catie-skin .well {
+  position: relative;
+  background: var(--md-surface-container-low) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: var(--md-shape-lg) !important;
+  box-shadow: none !important;
+  color: var(--md-on-surface);
+  overflow: hidden;
+  transform: none !important;
+}
+.catie-skin .panel::after,
+.catie-skin .modal-content::after { content: none !important; }
+.catie-skin .panel > * { position: relative; }
+
+.catie-skin .panel-heading {
+  background: var(--md-surface-container) !important;
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  border-radius: 0 !important;
+  color: var(--md-on-surface) !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+.catie-skin .panel-body { color: var(--md-on-surface); }
+.catie-skin .panel-footer {
+  background: var(--md-surface-container) !important;
+  border-top: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface-variant);
+}
+
+/* 彩色 panel：用 surface tint + 完整细边，不用侧边色条 */
+.catie-skin .panel-info { border-color: var(--md-outline-variant) !important; background: var(--md-secondary-container) !important; color: var(--md-on-secondary-container) !important; }
+.catie-skin .panel-info .panel-heading { background: transparent !important; color: var(--md-on-secondary-container) !important; border-bottom-color: var(--md-outline-variant) !important; }
+.catie-skin .panel-success { background: var(--md-success-container) !important; color: var(--md-on-success-container) !important; }
+.catie-skin .panel-warning { background: var(--md-warning-container) !important; color: var(--md-on-warning-container) !important; }
+.catie-skin .panel-danger { background: var(--md-error-container) !important; color: var(--md-on-error-container) !important; }
+.catie-skin .panel-primary { background: var(--md-primary-container) !important; color: var(--md-on-primary-container) !important; }
+.catie-skin .panel-heading[style*="background"] { background: var(--md-surface-container) !important; }
+
+/* ---------- 按钮 (Material 强调层级) ---------- */
+.catie-skin .btn {
+  border-radius: var(--md-shape-full) !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: none !important;
+  transition: box-shadow var(--md-dur-short) var(--md-ease-standard), background var(--md-dur-short) var(--md-ease-standard), transform var(--md-dur-short) var(--md-ease-standard);
+  text-transform: none;
+}
+.catie-skin .btn:hover { transform: none; text-decoration: none; }
+.catie-skin .btn:active { transform: scale(0.98); }
+.catie-skin .btn:focus, .catie-skin .btn.focus { outline: none; box-shadow: 0 0 0 3px var(--md-primary-container); }
+
+.catie-skin .btn-default,
+.catie-skin .btn-white {
+  background: var(--md-surface-container-high) !important;
+  color: var(--md-primary) !important;
+  box-shadow: none;
+}
+.catie-skin .btn-default:hover,
+.catie-skin .btn-white:hover { background: var(--md-surface-container-highest) !important; color: var(--md-on-primary-container) !important; }
+
+.catie-skin .btn-primary {
+  background: var(--md-primary) !important;
+  color: var(--md-on-primary) !important;
+  box-shadow: var(--md-e1);
+}
+.catie-skin .btn-primary:hover { background: oklch(0.44 0.16 256); box-shadow: var(--md-e2); }
+.catie-skin.catie-night .btn-primary:hover { background: oklch(0.84 0.12 256); }
+.catie-skin .btn-info {
+  background: var(--md-secondary) !important;
+  color: var(--md-on-secondary) !important;
+  box-shadow: var(--md-e1);
+}
+.catie-skin .btn-info:hover { background: oklch(0.46 0.07 210); }
+.catie-skin.catie-night .btn-info:hover { background: oklch(0.80 0.06 210); }
+.catie-skin .btn-success {
+  background: var(--md-success) !important;
+  color: #fff !important;
+  box-shadow: var(--md-e1);
+}
+.catie-skin .btn-success:hover { background: oklch(0.50 0.13 150); }
+.catie-skin .btn-warning {
+  background: var(--md-warning) !important;
+  color: var(--md-on-warning-container) !important;
+  box-shadow: var(--md-e1);
+}
+.catie-skin .btn-warning:hover { background: oklch(0.62 0.15 70); }
+.catie-skin .btn-danger {
+  background: var(--md-error) !important;
+  color: var(--md-on-error) !important;
+  box-shadow: var(--md-e1);
+}
+.catie-skin .btn-danger:hover { background: oklch(0.48 0.21 25); }
+.catie-skin .btn-link { background: transparent !important; color: var(--md-primary) !important; box-shadow: none; }
+.catie-skin .btn-link:hover { background: var(--md-primary-container) !important; color: var(--md-on-primary-container) !important; }
+.catie-skin .btn-rounded { border-radius: var(--md-shape-full) !important; }
+.catie-skin .btn-xs { padding: 3px 10px; font-size: 0.72rem; }
+
+/* ---------- 表单 (Material outlined text fields) ---------- */
+.catie-skin .form-control,
+.catie-skin input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+.catie-skin select,
+.catie-skin textarea {
+  background: var(--md-surface-container-low) !important;
+  border: 1px solid var(--md-outline) !important;
+  border-radius: var(--md-shape-xs) !important;
+  color: var(--md-on-surface) !important;
+  box-shadow: none !important;
+  transition: border-color var(--md-dur-short) var(--md-ease-standard), box-shadow var(--md-dur-short) var(--md-ease-standard);
+}
+.catie-skin .form-control:focus,
+.catie-skin input:focus,
+.catie-skin select:focus,
+.catie-skin textarea:focus {
+  outline: none;
+  border-color: var(--md-primary) !important;
+  box-shadow: 0 0 0 1px var(--md-primary) inset !important;
+}
+.catie-skin .input-group-addon {
+  background: var(--md-surface-container) !important;
+  border: 1px solid var(--md-outline) !important;
+  color: var(--md-on-surface-variant) !important;
+  border-radius: var(--md-shape-xs) !important;
+}
+.catie-skin ::placeholder { color: var(--md-on-surface-variant) !important; opacity: 0.7; }
+
+/* ---------- 表格 ---------- */
+.catie-skin .table { color: var(--md-on-surface); }
+.catie-skin .table > thead > tr > th {
+  background: var(--md-surface-container) !important;
+  color: var(--md-on-surface-variant) !important;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  border-bottom: 1px solid var(--md-outline-variant) !important;
+  border-top: none !important;
+}
+.catie-skin .table > tbody > tr > td,
+.catie-skin .table > tbody > tr > th {
+  border-top: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface);
+}
+.catie-skin .table-bordered,
+.catie-skin .table-bordered > thead > tr > th,
+.catie-skin .table-bordered > tbody > tr > td { border-color: var(--md-outline-variant) !important; }
+.catie-skin .table-striped > tbody > tr:nth-of-type(odd) { background: var(--md-surface-container-lowest); }
+.catie-skin .table-hover > tbody > tr:hover,
+.catie-skin .table > tbody > tr:hover { background: var(--md-surface-container-high) !important; }
+
+/* ---------- 标签 / 徽章 (Material chips) ---------- */
+.catie-skin .label,
+.catie-skin .badge {
+  border-radius: var(--md-shape-full) !important;
+  font-weight: 600;
+  border: none;
+  padding: 0.28em 0.7em;
+  letter-spacing: 0.02em;
+}
+.catie-skin .label-default, .catie-skin .badge { background: var(--md-surface-container-high) !important; color: var(--md-on-surface-variant) !important; }
+.catie-skin .label-primary { background: var(--md-primary-container) !important; color: var(--md-on-primary-container) !important; }
+.catie-skin .label-info { background: var(--md-secondary-container) !important; color: var(--md-on-secondary-container) !important; }
+.catie-skin .label-success { background: var(--md-success-container) !important; color: var(--md-on-success-container) !important; }
+.catie-skin .label-warning { background: var(--md-warning-container) !important; color: var(--md-on-warning-container) !important; }
+.catie-skin .label-danger { background: var(--md-error-container) !important; color: var(--md-on-error-container) !important; }
+
+/* ---------- 提示框 (Material banner，无侧边色条) ---------- */
+.catie-skin .alert {
+  border-radius: var(--md-shape-md) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  box-shadow: none;
+  padding: 12px 16px;
+}
+.catie-skin .alert-info { background: var(--md-secondary-container) !important; color: var(--md-on-secondary-container) !important; border-color: var(--md-outline-variant) !important; }
+.catie-skin .alert-success { background: var(--md-success-container) !important; color: var(--md-on-success-container) !important; border-color: var(--md-outline-variant) !important; }
+.catie-skin .alert-warning { background: var(--md-warning-container) !important; color: var(--md-on-warning-container) !important; border-color: var(--md-outline-variant) !important; }
+.catie-skin .alert-danger { background: var(--md-error-container) !important; color: var(--md-on-error-container) !important; border-color: var(--md-outline-variant) !important; }
+.catie-skin .alert .btn-xs { margin-left: 8px; }
+
+/* ---------- list-group ---------- */
+.catie-skin .list-group { border-radius: var(--md-shape-lg); }
+.catie-skin .list-group-item {
+  background: transparent !important;
+  border-color: var(--md-outline-variant) !important;
+  color: var(--md-on-surface) !important;
+  padding: 12px 16px;
+}
+.catie-skin .list-group-item:first-child { border-top-left-radius: var(--md-shape-lg); border-top-right-radius: var(--md-shape-lg); }
+.catie-skin .list-group-item:last-child { border-bottom-left-radius: var(--md-shape-lg); border-bottom-right-radius: var(--md-shape-lg); }
+.catie-skin a.list-group-item:hover { background: var(--md-surface-container-high) !important; }
+.catie-skin .list-group-item-danger { background: var(--md-error-container) !important; color: var(--md-on-error-container) !important; }
+
+/* ---------- nav-tabs (Material tabs) ---------- */
+.catie-skin .nav-tabs { border-bottom: 1px solid var(--md-outline-variant) !important; }
+.catie-skin .nav-tabs > li > a {
+  color: var(--md-on-surface-variant) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  border-bottom: 2px solid transparent !important;
+  font-weight: 600;
+  padding: 10px 16px;
+  transition: color var(--md-dur-short) var(--md-ease-standard), border-color var(--md-dur-short) var(--md-ease-standard);
+}
+.catie-skin .nav-tabs > li > a:hover { background: transparent !important; color: var(--md-primary) !important; border-bottom-color: var(--md-primary-container) !important; }
+.catie-skin .nav-tabs > li.active > a,
+.catie-skin .nav-tabs > li.active > a:hover,
+.catie-skin .nav-tabs > li.active > a:focus {
+  background: transparent !important;
+  color: var(--md-primary) !important;
+  border: none !important;
+  border-bottom: 2px solid var(--md-primary) !important;
+}
+
+/* ---------- dropdown (Material menu) ---------- */
+.catie-skin .dropdown-menu {
+  background: var(--md-surface-container) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  border-radius: var(--md-shape-sm) !important;
+  box-shadow: var(--md-e2) !important;
+  padding: 8px;
+}
+.catie-skin .dropdown-menu > li > a {
+  color: var(--md-on-surface) !important;
+  border-radius: var(--md-shape-xs);
+  padding: 8px 12px;
+  transition: background var(--md-dur-short) var(--md-ease-standard);
+}
+.catie-skin .dropdown-menu > li > a:hover { background: var(--md-surface-container-high) !important; color: var(--md-on-surface) !important; }
+.catie-skin .dropdown-menu .divider { background: var(--md-outline-variant) !important; height: 1px; margin: 4px 0; }
+
+/* ---------- 分页 ---------- */
+.catie-skin .pagination > li > a,
+.catie-skin .pagination > li > span {
+  background: var(--md-surface-container-low) !important;
+  border: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface) !important;
+  border-radius: 0 !important;
+}
+.catie-skin .pagination > li:first-child > a { border-top-left-radius: var(--md-shape-xs); border-bottom-left-radius: var(--md-shape-xs); }
+.catie-skin .pagination > li:last-child > a { border-top-right-radius: var(--md-shape-xs); border-bottom-right-radius: var(--md-shape-xs); }
+.catie-skin .pagination > .active > a,
+.catie-skin .pagination > .active > span { background: var(--md-primary) !important; border-color: var(--md-primary) !important; color: var(--md-on-primary) !important; }
+.catie-skin .breadcrumb { background: var(--md-surface-container-low) !important; border-radius: var(--md-shape-sm) !important; border: 1px solid var(--md-outline-variant); }
+
+/* ---------- 仪表盘特有元素 ---------- */
+/* 统计卡圆形图标 -> Material icon chip */
+.catie-skin .round {
+  line-height: 1 !important;
+  color: var(--md-on-secondary-container) !important;
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 1.1rem !important;
+  margin: 0 !important;
+  display: inline-grid !important;
+  place-items: center;
+  font-weight: 500;
+  border: none !important;
+  text-align: center;
+  border-radius: var(--md-shape-full) !important;
+  background: var(--md-secondary-container) !important;
+  box-shadow: none !important;
+}
+.catie-skin .item .top .fa { color: var(--md-tertiary) !important; }
+.catie-skin .hbox .col { color: var(--md-on-surface-variant) !important; }
+.catie-skin .hbox.b-t { border-top: 1px solid var(--md-outline-variant) !important; }
+.catie-skin .b-r { border-right: 1px solid var(--md-outline-variant) !important; }
+.catie-skin .b-light { border-color: var(--md-outline-variant) !important; }
+.catie-skin .m-t-n-xxl { margin-top: -42px; }
+
+/* 商户卡顶部 info 头 -> primary 表面 */
+.catie-skin .panel .panel-heading.bg-info,
+.catie-skin .panel .panel-heading.bg-info.dk {
+  background: var(--md-primary) !important;
+  color: var(--md-on-primary) !important;
+  border-bottom: none !important;
+}
+.catie-skin .panel .panel-heading.bg-info .btn-info {
+  background: var(--md-primary-container) !important;
+  color: var(--md-on-primary-container) !important;
+  box-shadow: none;
+}
+.catie-skin .panel .panel-heading.bg-info .btn-info:hover { background: var(--md-surface-container-high) !important; }
+
+/* 头像 */
+.catie-skin .avatar img,
+.catie-skin .img-thumbnail {
+  border: 2px solid var(--md-outline-variant) !important;
+  background: var(--md-surface-container) !important;
+  box-shadow: none;
+  border-radius: var(--md-shape-full);
+}
+
+/* footer */
+.catie-skin .app-footer .wrapper,
+.catie-skin .app-footer {
+  background: var(--md-surface-container-low) !important;
+  border-top: 1px solid var(--md-outline-variant) !important;
+  color: var(--md-on-surface-variant);
+}
+
+/* 模态框 */
+.catie-skin .modal-header { border-bottom: 1px solid var(--md-outline-variant) !important; }
+.catie-skin .modal-footer { border-top: 1px solid var(--md-outline-variant) !important; }
+.catie-skin .modal-backdrop.in { opacity: 0.4; background: var(--md-scrim); }
+
+/* bootstrap-table 兼容 */
+.catie-skin .fixed-table-container { border-color: var(--md-outline-variant) !important; border-radius: var(--md-shape-lg); }
+.catie-skin .bootstrap-table .table { border-radius: var(--md-shape-lg); overflow: hidden; }
+
+/* ---------- 主题切换按钮 (Material icon button) ---------- */
+.catie-theme-toggle {
+  position: fixed;
+  top: 10px;
+  right: 14px;
+  z-index: 2050;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  box-shadow: var(--md-e1);
+  cursor: pointer;
+  font-family: var(--md-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  user-select: none;
+  transform: none !important;
+  transition: background var(--md-dur-short) var(--md-ease-standard), box-shadow var(--md-dur-short) var(--md-ease-standard), color var(--md-dur-short) var(--md-ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+.catie-theme-toggle::before { content: none !important; }
+.catie-theme-toggle:hover { background: var(--md-surface-container-highest); color: var(--md-on-surface); box-shadow: var(--md-e2); }
+.catie-theme-toggle:active { transform: scale(0.96) !important; }
+.catie-theme-toggle .catie-toggle-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 20px; height: 20px;
+  transition: transform var(--md-dur-medium) var(--md-ease-emphasized);
+}
+.catie-theme-toggle:hover .catie-toggle-icon { transform: rotate(20deg); }
+.catie-skin.catie-day .catie-toggle-night { display: none; }
+.catie-skin.catie-night .catie-toggle-day { display: none; }
+.catie-theme-toggle .catie-toggle-label { white-space: nowrap; }
+@media (max-width: 767px) {
+  .catie-theme-toggle { padding: 8px; }
+  .catie-theme-toggle .catie-toggle-label { display: none; }
+}
+
+/* ---------- 进场动画 (克制：仅一次淡入上移) ---------- */
+@keyframes md-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.catie-skin .panel,
+.catie-skin .alert { animation: md-rise var(--md-dur-medium) var(--md-ease-emphasized) both; }
+.catie-skin .row .panel:nth-child(2) { animation-delay: 40ms; }
+.catie-skin .row .panel:nth-child(3) { animation-delay: 80ms; }
+.catie-skin .row .panel:nth-child(4) { animation-delay: 120ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .catie-skin *,
+  .catie-skin .panel,
+  .catie-theme-toggle { animation: none !important; transition: none !important; }
+}

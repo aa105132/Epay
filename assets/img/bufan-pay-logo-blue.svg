@@ -1,0 +1,16 @@
+<svg width="228" height="58" viewBox="0 0 228 58" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="不凡聚合支付平台">
+  <defs>
+    <linearGradient id="g" x1="8" y1="6" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F7CFF"/>
+      <stop offset="1" stop-color="#0A55FF"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="46" height="46" rx="12" fill="url(#g)"/>
+  <path d="M18 21.5H40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <path d="M29 22V39" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <path d="M29 27L20 37" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <path d="M29 27L39 37" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="40" cy="19" r="3.5" fill="#BFD2FF"/>
+  <text x="66" y="25" fill="#111827" font-size="18" font-weight="800" font-family="PingFang SC, Microsoft YaHei, sans-serif">不凡聚合支付平台</text>
+  <text x="66" y="43" fill="#6B7280" font-size="10" letter-spacing="2" font-family="Inter, Arial, sans-serif">BUFAN PAYMENT GATEWAY</text>
+</svg>

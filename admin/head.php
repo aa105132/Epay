@@ -28,6 +28,7 @@ if($admin_cdnpublic==1){
   <link href="<?php echo $cdnpublic?>twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="../assets/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="../assets/css/bootstrap-table.css?v=1" rel="stylesheet"/>
+  <link href="../assets/css/notion-ledger.css?v=1" rel="stylesheet"/>
   <link href="<?php echo $cdnpublic?>font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
   <script src="<?php echo $cdnpublic?>modernizr/2.8.3/modernizr.min.js"></script>
   <script src="<?php echo $cdnpublic?>jquery/3.4.1/jquery.min.js"></script>
@@ -135,6 +136,9 @@ if($admin_cdnpublic==1){
         <?php if(class_exists('\\lib\\Complain\\CommUtil')){?><li><a href="./complain.php">支付交易投诉</a></li><?php }?>
         <?php if(class_exists('\\lib\\WxMchRisk')){?><li><a href="./mchrisk.php">渠道商户违规记录</a></li><?php }?>
             </ul>
+          </li>
+          <li class="<?php echo checkIfActive('notifyledger')?>">
+            <a href="./notifyledger.php"><i class="fa fa-bell-o"></i> 收款监控</a>
           </li>
           <li><a href="./login.php?logout" onclick="return confirm('是否确定退出登录？')"><i class="fa fa-power-off"></i> 退出登录</a></li>
         </ul>

@@ -23,8 +23,9 @@ if(!defined('IN_CRONLITE'))exit();
     <script src="/assets/doc/js/home.js"></script>
     <link rel="stylesheet" href="/assets/doc/css/docView.css" />
     <script src="/assets/doc/js/docView.js"></script>
+    <link rel="stylesheet" href="/assets/doc/css/doc-modern.css?v=20260618" />
 </head>
-<body>
+<body class="doc-modern">
     <!-- top-begin -->
     <div id="navbar">
         <div class="bg-blur" style="background: white!important;"></div>
@@ -33,6 +34,9 @@ if(!defined('IN_CRONLITE'))exit();
                 <div class="navRight">
                     <li class="layui-nav-item layui-this" lay-unselect>
                         <a href="/" style="padding-right: 40px;">返回官网</a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a class="doc-download-btn" href="/llm.txt" download>下载 llm.txt</a>
                     </li>
                 </div>
             </ul>
@@ -160,6 +164,16 @@ if(!defined('IN_CRONLITE'))exit();
     <div id="body">
         <div id="content_body" name="content_body" style="width:100%;height:100%;border:none;overflow: auto;">
             <div id="article-content" class="markdown-body">
+
+                <section class="doc-visual-hero doc-index-visual">
+                    <div>
+                        <p>DEVELOPER DOCUMENTS</p>
+                        <h1>开发文档</h1>
+                        <span>接口说明、签名规则、回调通知和订单查询集中整理。</span>
+                        <a class="doc-download-btn hero-download" href="/llm.txt" download>下载 llm.txt</a>
+                    </div>
+                    <img src="/assets/img/generated/nav-docs-image2.png" alt="开发文档视觉图" />
+                </section>
                 <script>
                     var catalogList = [{"id":1,"parent_id":0,"title":"接口说明","mdFileName":"index.md","url":"index.html","level":0},{"id":2,"parent_id":0,"title":"签名规则","mdFileName":"sign_note.md","url":"sign_note.html","level":0},{"id":3,"parent_id":0,"title":"支付方式列表","mdFileName":"paytype.md","url":"paytype.html","level":0},{"id":4,"parent_id":0,"title":"支付相关接口","level":0},{"id":5,"parent_id":4,"title":"页面跳转支付","mdFileName":"pay_submit.md","url":"pay_submit.html","level":1},{"id":6,"parent_id":4,"title":"统一下单接口","mdFileName":"pay_create.md","url":"pay_create.html","level":1},{"id":7,"parent_id":4,"title":"订单查询","mdFileName":"pay_query.md","url":"pay_query.html","level":1},{"id":8,"parent_id":4,"title":"支付结果通知","mdFileName":"pay_notify.md","url":"pay_notify.html","level":1},{"id":9,"parent_id":4,"title":"订单退款","mdFileName":"pay_refund.md","url":"pay_refund.html","level":1},{"id":10,"parent_id":4,"title":"订单退款查询","mdFileName":"pay_refundquery.md","url":"pay_refundquery.html","level":1},{"id":11,"parent_id":4,"title":"关闭订单","mdFileName":"pay_close.md","url":"pay_close.html","level":1},{"id":20,"parent_id":0,"title":"商户相关接口","level":0},{"id":21,"parent_id":20,"title":"查询商户信息","mdFileName":"merchant_info.md","url":"merchant_info.html","level":1},{"id":22,"parent_id":20,"title":"查询订单列表","mdFileName":"merchant_orders.md","url":"merchant_orders.html","level":1},{"id":30,"parent_id":0,"title":"代付相关接口","level":0},{"id":31,"parent_id":30,"title":"转账发起","mdFileName":"transfer_submit.md","url":"transfer_submit.html","level":1},{"id":32,"parent_id":30,"title":"转账查询","mdFileName":"transfer_query.md","url":"transfer_query.html","level":1},{"id":33,"parent_id":30,"title":"可用余额查询","mdFileName":"transfer_balance.md","url":"transfer_balance.html","level":1},{"id":50,"parent_id":0,"title":"SDK下载","pageTitle":"接口说明","mdFileName":"sdk.md","url":"sdk.html","level":0}];
                     initTree(catalogList);
@@ -212,5 +226,6 @@ if(!defined('IN_CRONLITE'))exit();
             }
         })
     </script>
+    <script src="/assets/doc/js/doc-motion.js?v=20260618"></script>
 </body>
 </html>

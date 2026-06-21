@@ -20,6 +20,7 @@ $conf = array_merge($conf, $groupconfig);
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
+  <script>(function(){try{var t=localStorage.getItem('catie-theme');if(t!=='night'&&t!=='day')t='day';document.documentElement.className+=' catie-skin catie-'+t;}catch(e){document.documentElement.className+=' catie-skin catie-day';}})();</script>
   <title><?php echo $title?> | <?php echo $conf['sitename']?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -29,6 +30,9 @@ $conf = array_merge($conf, $groupconfig);
   <link rel="stylesheet" href="./assets/css/font.css" type="text/css" />
   <link rel="stylesheet" href="./assets/css/app.css" type="text/css" />
   <link rel="stylesheet" href="../assets/css/bootstrap-table.css?v=1"/>
+  <link rel="stylesheet" href="../assets/css/catie-theme.css?v=1" type="text/css" />
+  <link rel="stylesheet" href="../assets/css/notion-ledger.css?v=1" type="text/css" />
+  <script defer src="../assets/js/catie-theme.js?v=1"></script>
 </head>
 <body>
 <div class="app app-header-fixed  ">
@@ -169,6 +173,12 @@ $conf = array_merge($conf, $groupconfig);
                 <a href="order.php">
                   <i class="glyphicon glyphicon-list-alt"></i>
                   <span>订单记录</span>
+                </a>
+              </li>
+			  <li class="<?php echo checkIfActive('notifyledger')?>">
+                <a href="notifyledger.php">
+                  <i class="fa fa-bell-o fa-fw"></i>
+                  <span>到账看板</span>
                 </a>
               </li>
 			  <li class="<?php echo checkIfActive('settle')?>">
